@@ -278,9 +278,8 @@ function pagination(page: number, totalPages: number, search: string): string {
 }
 
 function heroLogoSvg(): string {
-  // Same logo but with separate animated pupil circles
-  // Eye outer paths WITHOUT the pupil sub-paths (just the outer rounded rect)
-  // Pupil positions in viewBox coords: left ~(168,142), right ~(386,144)
+  // Eye outer shapes only (no pupil sub-paths). Pupils are separate <g> elements for animation.
+  // Pupil paths converted to absolute coords: left center ~(1677,1325), right center ~(3859,1312)
   return `<svg id="hero-logo" class="hero-logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 534 275">
   <defs>
     <linearGradient id="sparkle-grad-hero" x1="0" y1="0" x2="0" y2="1">
@@ -288,99 +287,73 @@ function heroLogoSvg(): string {
       <stop offset="50%" stop-color="#f59e0b"/>
       <stop offset="100%" stop-color="#fbbf24"/>
     </linearGradient>
-    <!-- Clip pupils to stay inside eye shapes -->
+    <!-- Clip pupils to eye outlines -->
     <clipPath id="left-eye-clip">
-      <ellipse cx="168" cy="142" rx="58" ry="52"/>
+      <path d="M735 2126 c-319 -60 -584 -289 -698 -603 l-32 -88 0 -360 c0 -354 0 -361 24 -430 105 -309 352 -538 662 -614 84 -21 104 -22 670 -19 l584 3 69 33 c94 44 204 155 249 249 l32 68 0 530 c0 528 0 530 -23 605 -48 153 -121 268 -244 386 -110 106 -210 167 -365 221 l-78 28 -390 2 c-286 1 -409 -2 -460 -11z" transform="translate(0,275) scale(0.1,-0.1)"/>
     </clipPath>
     <clipPath id="right-eye-clip">
-      <ellipse cx="386" cy="142" rx="58" ry="52"/>
+      <path d="M3761 2129 c-281 -55 -553 -282 -659 -549 -57 -144 -57 -144 -57 -690 0 -505 0 -505 23 -562 50 -124 166 -240 290 -290 l57 -23 595 0 c550 0 600 1 665 19 302 81 541 312 637 616 22 73 23 86 23 430 0 346 -1 357 -23 425 -51 152 -105 240 -221 358 -90 93 -163 145 -278 199 -150 70 -213 78 -638 77 -203 -1 -390 -5 -414 -10z" transform="translate(0,275) scale(0.1,-0.1)"/>
     </clipPath>
   </defs>
   <g transform="translate(0,275) scale(0.1,-0.1)">
-    <!-- Eye shapes (full paths with pupil holes for base rendering) -->
+    <!-- Eye outlines only (no pupil holes) -->
     <g class="glint-eyes" fill="currentColor">
-      <path d="M735 2126 c-319 -60 -584 -289 -698 -603 l-32 -88 0 -360 c0 -354 0 -361 24 -430 105 -309 352 -538 662 -614 84 -21 104 -22 670 -19 l584 3 69 33 c94 44 204 155 249 249 l32 68 0 530 c0 528 0 530 -23 605 -48 153 -121 268 -244 386 -110 106 -210 167 -365 221 l-78 28 -390 2 c-286 1 -409 -2 -460 -11z m942 -801 c106 -31 183 -134 183 -242 -1 -226 -274 -348 -434 -195 -110 106 -105 280 12 382 44 39 111 68 163 69 14 1 48 -6 76 -14z"/>
-      <path d="M3761 2129 c-281 -55 -553 -282 -659 -549 -57 -144 -57 -144 -57 -690 0 -505 0 -505 23 -562 50 -124 166 -240 290 -290 l57 -23 595 0 c550 0 600 1 665 19 302 81 541 312 637 616 22 73 23 86 23 430 0 346 -1 357 -23 425 -51 152 -105 240 -221 358 -90 93 -163 145 -278 199 -150 70 -213 78 -638 77 -203 -1 -390 -5 -414 -10z m98 -817 c62 -29 118 -94 136 -157 48 -164 -59 -319 -231 -333 -191 -15 -332 190 -250 363 62 132 216 188 345 127z"/>
+      <path d="M735 2126 c-319 -60 -584 -289 -698 -603 l-32 -88 0 -360 c0 -354 0 -361 24 -430 105 -309 352 -538 662 -614 84 -21 104 -22 670 -19 l584 3 69 33 c94 44 204 155 249 249 l32 68 0 530 c0 528 0 530 -23 605 -48 153 -121 268 -244 386 -110 106 -210 167 -365 221 l-78 28 -390 2 c-286 1 -409 -2 -460 -11z"/>
+      <path d="M3761 2129 c-281 -55 -553 -282 -659 -549 -57 -144 -57 -144 -57 -690 0 -505 0 -505 23 -562 50 -124 166 -240 290 -290 l57 -23 595 0 c550 0 600 1 665 19 302 81 541 312 637 616 22 73 23 86 23 430 0 346 -1 357 -23 425 -51 152 -105 240 -221 358 -90 93 -163 145 -278 199 -150 70 -213 78 -638 77 -203 -1 -390 -5 -414 -10z"/>
     </g>
     <!-- Sparkle -->
     <path class="glint-sparkle" fill="url(#sparkle-grad-hero)" d="M2651 2698 c-6 -29 -22 -116 -36 -193 -29 -166 -46 -219 -69 -223 -10 -2 -40 6 -68 18 -27 12 -53 19 -56 15 -3 -3 4 -26 16 -50 43 -88 33 -96 -164 -145 -141 -35 -154 -39 -154 -50 0 -6 10 -12 23 -14 217 -46 317 -80 317 -109 0 -8 -11 -40 -25 -71 -14 -31 -25 -59 -25 -61 0 -2 21 5 47 16 26 11 58 19 72 17 35 -4 51 -54 92 -298 43 -256 51 -266 83 -93 40 220 67 347 81 373 16 31 26 31 109 -4 21 -9 40 -16 41 -16 2 0 -10 30 -26 68 l-29 67 21 18 c23 19 178 69 272 87 36 7 57 16 54 23 -2 7 -58 26 -125 43 -145 37 -212 61 -218 79 -3 7 2 27 10 44 9 17 21 42 26 56 l9 25 -52 -20 c-29 -11 -60 -20 -70 -20 -27 0 -44 51 -83 253 -19 100 -37 190 -40 200 -10 31 -22 18 -33 -35z"/>
   </g>
-  <!-- Animated pupils (in viewBox coordinates, on top) -->
+  <!-- Animated pupils clipped to eye shapes -->
   <g clip-path="url(#left-eye-clip)">
-    <circle id="pupil-left" cx="168" cy="142" r="12" fill="#0a0a0b"/>
+    <g id="pupil-left">
+      <circle cx="168" cy="142" r="18" fill="var(--bg, #0a0a0b)"/>
+    </g>
   </g>
   <g clip-path="url(#right-eye-clip)">
-    <circle id="pupil-right" cx="386" cy="142" r="12" fill="#0a0a0b"/>
+    <g id="pupil-right">
+      <circle cx="386" cy="142" r="18" fill="var(--bg, #0a0a0b)"/>
+    </g>
   </g>
 </svg>
 <script>
 (function() {
-  const svg = document.getElementById('hero-logo');
-  const pupilL = document.getElementById('pupil-left');
-  const pupilR = document.getElementById('pupil-right');
-  if (!svg || !pupilL || !pupilR) return;
+  var svg = document.getElementById('hero-logo');
+  var pL = document.getElementById('pupil-left');
+  var pR = document.getElementById('pupil-right');
+  if (!svg || !pL || !pR) return;
 
-  // Rest positions (center of each eye)
-  const restL = { x: 168, y: 142 };
-  const restR = { x: 386, y: 142 };
-  const maxDrift = 8; // max pixels the pupil moves in viewBox units
-
-  let currentL = { x: 0, y: 0 };
-  let currentR = { x: 0, y: 0 };
-  let targetL = { x: 0, y: 0 };
-  let targetR = { x: 0, y: 0 };
-  let animating = false;
-
-  function lerp(a, b, t) { return a + (b - a) * t; }
+  var maxDrift = 10;
+  var cur = { x: 0, y: 0 };
+  var tgt = { x: 0, y: 0 };
+  var raf = 0;
 
   function animate() {
-    const ease = 0.08;
-    currentL.x = lerp(currentL.x, targetL.x, ease);
-    currentL.y = lerp(currentL.y, targetL.y, ease);
-    currentR.x = lerp(currentR.x, targetR.x, ease);
-    currentR.y = lerp(currentR.y, targetR.y, ease);
-
-    pupilL.setAttribute('cx', restL.x + currentL.x);
-    pupilL.setAttribute('cy', restL.y + currentL.y);
-    pupilR.setAttribute('cx', restR.x + currentR.x);
-    pupilR.setAttribute('cy', restR.y + currentR.y);
-
-    if (Math.abs(currentL.x - targetL.x) > 0.01 ||
-        Math.abs(currentL.y - targetL.y) > 0.01) {
-      requestAnimationFrame(animate);
-    } else { animating = false; }
+    cur.x += (tgt.x - cur.x) * 0.07;
+    cur.y += (tgt.y - cur.y) * 0.07;
+    var tx = 'translate(' + cur.x + 'px,' + cur.y + 'px)';
+    pL.style.transform = tx;
+    pR.style.transform = tx;
+    if (Math.abs(cur.x - tgt.x) > 0.05 || Math.abs(cur.y - tgt.y) > 0.05) {
+      raf = requestAnimationFrame(animate);
+    } else { raf = 0; }
   }
 
-  function startAnim() {
-    if (!animating) { animating = true; requestAnimationFrame(animate); }
-  }
+  function kick() { if (!raf) raf = requestAnimationFrame(animate); }
 
   document.addEventListener('mousemove', function(e) {
-    const rect = svg.getBoundingClientRect();
-    // Cursor position relative to SVG center
-    const cx = rect.left + rect.width / 2;
-    const cy = rect.top + rect.height / 2;
-    const dx = e.clientX - cx;
-    const dy = e.clientY - cy;
-
-    // Normalize and clamp
-    const dist = Math.sqrt(dx * dx + dy * dy) || 1;
-    const scale = Math.min(dist / 300, 1); // ramp over 300px
-    const nx = (dx / dist) * maxDrift * scale;
-    const ny = (dy / dist) * maxDrift * scale;
-
-    targetL.x = nx;
-    targetL.y = ny;
-    targetR.x = nx;
-    targetR.y = ny;
-    startAnim();
+    var r = svg.getBoundingClientRect();
+    var dx = e.clientX - (r.left + r.width / 2);
+    var dy = e.clientY - (r.top + r.height / 2);
+    var d = Math.sqrt(dx * dx + dy * dy) || 1;
+    var s = Math.min(d / 300, 1);
+    tgt.x = (dx / d) * maxDrift * s;
+    tgt.y = (dy / d) * maxDrift * s;
+    kick();
   });
 
-  // Return to center when mouse leaves window
   document.addEventListener('mouseleave', function() {
-    targetL.x = 0; targetL.y = 0;
-    targetR.x = 0; targetR.y = 0;
-    startAnim();
+    tgt.x = 0; tgt.y = 0; kick();
   });
 })();
 </script>`;
