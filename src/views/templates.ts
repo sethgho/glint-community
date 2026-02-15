@@ -357,6 +357,40 @@ function heroLogoSvg(): string {
   document.addEventListener('mouseleave', function() {
     tgt.x = 0; tgt.y = 0; kick();
   });
+
+  // Mobile: use device orientation (accelerometer/gyro) for tilt tracking
+  var hasOrientation = false;
+  function handleOrientation(e) {
+    if (e.gamma === null || e.beta === null) return;
+    hasOrientation = true;
+    // gamma: left-right tilt (-90 to 90), beta: front-back tilt (-180 to 180)
+    // Normalize to -1..1 range, clamp
+    var nx = Math.max(-1, Math.min(1, e.gamma / 30));
+    // beta ~45 is typical phone-held-upright, shift so that's center
+    var ny = Math.max(-1, Math.min(1, (e.beta - 45) / 30));
+    tgt.x = nx * maxDrift;
+    // Asymmetric Y same as mouse: more drift looking down
+    var yDrift = ny > 0 ? maxDrift * 4 : maxDrift;
+    tgt.y = ny * yDrift;
+    kick();
+  }
+
+  // iOS 13+ requires permission request on user gesture
+  if (typeof DeviceOrientationEvent !== 'undefined' &&
+      typeof DeviceOrientationEvent.requestPermission === 'function') {
+    // Add one-time touch listener to request permission
+    document.addEventListener('touchstart', function reqPerm() {
+      DeviceOrientationEvent.requestPermission().then(function(state) {
+        if (state === 'granted') {
+          window.addEventListener('deviceorientation', handleOrientation);
+        }
+      }).catch(function(){});
+      document.removeEventListener('touchstart', reqPerm);
+    }, { once: true });
+  } else if (typeof DeviceOrientationEvent !== 'undefined') {
+    // Android and older iOS — just listen
+    window.addEventListener('deviceorientation', handleOrientation);
+  }
 })();
 </script>`;
 }
