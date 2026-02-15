@@ -307,12 +307,12 @@ function heroLogoSvg(): string {
   <!-- Animated pupils clipped to eye shapes -->
   <g clip-path="url(#left-eye-clip)">
     <g id="pupil-left">
-      <circle cx="168" cy="142" r="18" fill="var(--bg, #0a0a0b)"/>
+      <circle cx="168" cy="142" r="42" fill="var(--bg, #0a0a0b)"/>
     </g>
   </g>
   <g clip-path="url(#right-eye-clip)">
     <g id="pupil-right">
-      <circle cx="386" cy="142" r="18" fill="var(--bg, #0a0a0b)"/>
+      <circle cx="386" cy="142" r="42" fill="var(--bg, #0a0a0b)"/>
     </g>
   </g>
 </svg>
@@ -348,7 +348,9 @@ function heroLogoSvg(): string {
     var d = Math.sqrt(dx * dx + dy * dy) || 1;
     var s = Math.min(d / 300, 1);
     tgt.x = (dx / d) * maxDrift * s;
-    tgt.y = (dy / d) * maxDrift * s;
+    // Asymmetric Y: 2.5x more movement downward than upward
+    var yDrift = dy > 0 ? maxDrift * 2.5 : maxDrift;
+    tgt.y = (dy / d) * yDrift * s;
     kick();
   });
 
