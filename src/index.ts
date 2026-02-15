@@ -10,6 +10,7 @@ import { secureHeaders } from 'hono/secure-headers';
 import apiAuth from './routes/api-auth';
 import apiStyles from './routes/api-styles';
 import web from './routes/web';
+import { rateLimit } from './middleware/rate-limit';
 
 const app = new Hono();
 
@@ -30,6 +31,11 @@ app.use('/js/*', staticCache, serveStatic({ root: './public' }));
 app.use('/img/*', immutableCache, serveStatic({ root: './public' }));
 app.use('/favicon.ico', immutableCache, serveStatic({ path: './public/favicon.ico' }));
 app.use('/site.webmanifest', staticCache, serveStatic({ path: './public/site.webmanifest' }));
+
+// Rate limiting
+app.use('/api/auth/*', rateLimit({ windowMs: 60_000, max: 20, message: 'Too many auth requests' }));
+app.use('/api/styles/*/publish', rateLimit({ windowMs: 60_000, max: 5, message: 'Too many publish requests' }));
+app.use('/api/*', rateLimit({ windowMs: 60_000, max: 120 }));
 
 // API routes
 app.route('/api/auth', apiAuth);
