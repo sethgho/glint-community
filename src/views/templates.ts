@@ -66,6 +66,7 @@ export function homePage(styles: any[], total: number, page: number, search: str
     <div class="hero">
       <div class="container">
         ${heroLogoSvg()}
+        <p id="tilt-hint" style="display:none;font-size:0.8rem;color:var(--text-muted);margin-bottom:0.5rem;">Tap the eyes to enable tilt tracking 👆</p>
         <h1>Emotion packs for your Tidbyt.</h1>
         <p>Glint puts expressive eyes on your display. Pick a style, install it in one command.</p>
         <form class="search-form" action="/" method="get">
@@ -359,37 +360,45 @@ function heroLogoSvg(): string {
   });
 
   // Mobile: use device orientation (accelerometer/gyro) for tilt tracking
-  var hasOrientation = false;
   function handleOrientation(e) {
     if (e.gamma === null || e.beta === null) return;
-    hasOrientation = true;
-    // gamma: left-right tilt (-90 to 90), beta: front-back tilt (-180 to 180)
-    // Normalize to -1..1 range, clamp
     var nx = Math.max(-1, Math.min(1, e.gamma / 30));
-    // beta ~45 is typical phone-held-upright, shift so that's center
     var ny = Math.max(-1, Math.min(1, (e.beta - 45) / 30));
     tgt.x = nx * maxDrift;
-    // Asymmetric Y same as mouse: more drift looking down
     var yDrift = ny > 0 ? maxDrift * 4 : maxDrift;
     tgt.y = ny * yDrift;
     kick();
+    // Hide the hint once it's working
+    var hint = document.getElementById('tilt-hint');
+    if (hint) hint.style.display = 'none';
   }
 
-  // iOS 13+ requires permission request on user gesture
-  if (typeof DeviceOrientationEvent !== 'undefined' &&
-      typeof DeviceOrientationEvent.requestPermission === 'function') {
-    // Add one-time touch listener to request permission
-    document.addEventListener('touchstart', function reqPerm() {
-      DeviceOrientationEvent.requestPermission().then(function(state) {
-        if (state === 'granted') {
-          window.addEventListener('deviceorientation', handleOrientation);
-        }
-      }).catch(function(){});
-      document.removeEventListener('touchstart', reqPerm);
-    }, { once: true });
-  } else if (typeof DeviceOrientationEvent !== 'undefined') {
-    // Android and older iOS — just listen
+  function startListening() {
     window.addEventListener('deviceorientation', handleOrientation);
+  }
+
+  // Detect touch device
+  var isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+
+  if (isTouchDevice && typeof DeviceOrientationEvent !== 'undefined') {
+    if (typeof DeviceOrientationEvent.requestPermission === 'function') {
+      // iOS 13+ — needs click handler (not touchstart) on HTTPS
+      var hint = document.getElementById('tilt-hint');
+      if (hint) hint.style.display = 'block';
+      svg.addEventListener('click', function iosTap() {
+        DeviceOrientationEvent.requestPermission().then(function(state) {
+          if (state === 'granted') startListening();
+          if (hint) hint.style.display = 'none';
+        }).catch(function(err) {
+          console.log('Orientation permission error:', err);
+          if (hint) hint.style.display = 'none';
+        });
+        svg.removeEventListener('click', iosTap);
+      });
+    } else {
+      // Android — just listen
+      startListening();
+    }
   }
 })();
 </script>`;
