@@ -348,8 +348,8 @@ function heroLogoSvg(): string {
     var d = Math.sqrt(dx * dx + dy * dy) || 1;
     var s = Math.min(d / 300, 1);
     tgt.x = (dx / d) * maxDrift * s;
-    // Asymmetric Y: 2.5x more movement downward than upward
-    var yDrift = dy > 0 ? maxDrift * 2.5 : maxDrift;
+    // Asymmetric Y: 4x more movement downward than upward
+    var yDrift = dy > 0 ? maxDrift * 4 : maxDrift;
     tgt.y = (dy / d) * yDrift * s;
     kick();
   });
