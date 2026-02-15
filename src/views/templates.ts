@@ -41,7 +41,7 @@ export function layout(title: string, body: string, meta?: { description?: strin
 <body>
   <nav class="nav">
     <div class="nav-inner">
-      <a href="/" class="nav-brand"><img src="/img/logo-header.png" alt="Glint" class="nav-logo"> <strong>Glint</strong> Community</a>
+      <a href="/" class="nav-brand"><img src="/img/logo.svg" alt="Glint" class="nav-logo"> <strong>Glint</strong> Community</a>
       <div class="nav-links">
         <a href="/">Gallery</a>
         <a href="/contribute">Contribute</a>
@@ -65,7 +65,7 @@ export function homePage(styles: any[], total: number, page: number, search: str
   return `
     <div class="hero">
       <div class="container">
-        <img src="/img/logo-trimmed.png" alt="Glint" class="hero-logo">
+        <img src="/img/logo.svg" alt="Glint" class="hero-logo">
         <h1>Emotion packs for your Tidbyt.</h1>
         <p>Glint puts expressive eyes on your display. Pick a style, install it in one command.</p>
         <form class="search-form" action="/" method="get">
