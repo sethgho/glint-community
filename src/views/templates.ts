@@ -26,7 +26,7 @@ export function layout(title: string, body: string): string {
   <main>${body}</main>
   <footer class="footer">
     <div class="container">
-      <p>Glint Community — Express yourself in 64×32 pixels</p>
+      <p>Glint — expressive eyes for your Tidbyt display</p>
     </div>
   </footer>
 </body>
@@ -39,8 +39,8 @@ export function homePage(styles: any[], total: number, page: number, search: str
   return `
     <div class="hero">
       <div class="container">
-        <h1>Glint Style Gallery</h1>
-        <p>Community-created emotion styles for your Tidbyt display. Browse, install, and share.</p>
+        <h1>Emotion packs for your Tidbyt.</h1>
+        <p>Glint puts expressive eyes on your display. Pick a style, install it in one command.</p>
         <form class="search-form" action="/" method="get">
           <input type="text" name="search" placeholder="Search styles..." value="${escHtml(search)}" class="search-input">
           <button type="submit" class="btn">Search</button>
@@ -119,7 +119,7 @@ export function stylePage(style: any, versions: any[]): string {
         ${emotions.map((e: any) => `
           <div class="emotion-card">
             <img src="/api/styles/${escHtml(style.author)}/${escHtml(style.slug)}/emotions/${escHtml(e.emotion)}?version=${escHtml(style.version)}" alt="${escHtml(e.emotion)}" class="emotion-img">
-            <span class="emotion-label">${escHtml(e.emotion)}</span>
+            <code class="emotion-label">${escHtml(e.emotion)}</code>
           </div>
         `).join('')}
       </div>
