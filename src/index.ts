@@ -22,12 +22,14 @@ app.use('/api/*', cors({
   allowHeaders: ['Authorization', 'Content-Type'],
 }));
 
-// Static files
-app.use('/css/*', serveStatic({ root: './public' }));
-app.use('/js/*', serveStatic({ root: './public' }));
-app.use('/img/*', serveStatic({ root: './public' }));
-app.use('/favicon.ico', serveStatic({ path: './public/favicon.ico' }));
-app.use('/site.webmanifest', serveStatic({ path: './public/site.webmanifest' }));
+// Static files with caching
+const staticCache = async (c: any, next: any) => { await next(); c.header('Cache-Control', 'public, max-age=86400'); };
+const immutableCache = async (c: any, next: any) => { await next(); c.header('Cache-Control', 'public, max-age=31536000, immutable'); };
+app.use('/css/*', staticCache, serveStatic({ root: './public' }));
+app.use('/js/*', staticCache, serveStatic({ root: './public' }));
+app.use('/img/*', immutableCache, serveStatic({ root: './public' }));
+app.use('/favicon.ico', immutableCache, serveStatic({ path: './public/favicon.ico' }));
+app.use('/site.webmanifest', staticCache, serveStatic({ path: './public/site.webmanifest' }));
 
 // API routes
 app.route('/api/auth', apiAuth);

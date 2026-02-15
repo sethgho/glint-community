@@ -32,7 +32,12 @@ web.get('/styles/:author/:slug', async (c) => {
   const versions = getStyleVersions(author, slug);
   const html = layout(
     `@${author}/${slug} — Glint Community`,
-    stylePage(style, versions)
+    stylePage(style, versions),
+    {
+      description: style.description || `${style.name} emotion style for Glint Tidbyt display`,
+      url: `https://glint.sethgholson.com/styles/${author}/${slug}`,
+      image: `https://glint.sethgholson.com/api/styles/${author}/${slug}/emotions/happy?version=${style.version}`,
+    }
   );
   return c.html(html);
 });

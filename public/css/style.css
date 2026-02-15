@@ -115,15 +115,17 @@ a:hover { color: var(--accent-hover); }
 }
 .card:hover { border-color: var(--accent); transform: translateY(-2px); color: var(--text); }
 .card-preview {
-  height: 80px;
+  height: 100px;
   display: flex;
   align-items: center;
   justify-content: center;
   background: #000;
   image-rendering: pixelated;
+  border-radius: var(--radius) var(--radius) 0 0;
+  overflow: hidden;
 }
 .card-preview img {
-  height: 64px;
+  height: 80px;
   image-rendering: pixelated;
 }
 .card-placeholder { font-size: 2rem; }
