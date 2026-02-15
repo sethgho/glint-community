@@ -25,6 +25,9 @@ app.use('/api/*', cors({
 // Static files
 app.use('/css/*', serveStatic({ root: './public' }));
 app.use('/js/*', serveStatic({ root: './public' }));
+app.use('/img/*', serveStatic({ root: './public' }));
+app.use('/favicon.ico', serveStatic({ path: './public/favicon.ico' }));
+app.use('/site.webmanifest', serveStatic({ path: './public/site.webmanifest' }));
 
 // API routes
 app.route('/api/auth', apiAuth);
