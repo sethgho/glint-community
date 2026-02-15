@@ -1,0 +1,11 @@
+# deps
+node_modules/
+
+# runtime data
+/data/
+
+# local env
+.env
+
+# logs
+*.log
