@@ -68,9 +68,7 @@ export function homePage(styles: any[], total: number, page: number, search: str
 }
 
 export function styleCard(style: any): string {
-  const previewUrl = style.preview_path 
-    ? `/api/styles/${style.author}/${style.slug}/emotions/happy?version=${style.version}`
-    : '';
+  const previewUrl = `/api/styles/${escHtml(style.author)}/${escHtml(style.slug)}/emotions/happy?version=${escHtml(style.version)}`;
 
   return `
     <a href="/styles/${escHtml(style.author)}/${escHtml(style.slug)}" class="card">
