@@ -2,20 +2,46 @@
  * HTML templates for the web gallery (SSR, no framework)
  */
 
-export function layout(title: string, body: string): string {
+export function layout(title: string, body: string, meta?: { description?: string; url?: string; image?: string }): string {
+  const desc = meta?.description || 'Emotion packs for your Tidbyt. Expressive eyes on a 64×32 pixel display.';
+  const url = meta?.url || 'https://glint.sethgholson.com';
+  const ogImage = meta?.image || 'https://glint.sethgholson.com/img/og-image.png';
+
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>${escHtml(title)}</title>
+  <meta name="description" content="${escHtml(desc)}">
+
+  <!-- OpenGraph -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="${escHtml(title)}">
+  <meta property="og:description" content="${escHtml(desc)}">
+  <meta property="og:url" content="${escHtml(url)}">
+  <meta property="og:image" content="${escHtml(ogImage)}">
+  <meta property="og:site_name" content="Glint Community">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="${escHtml(title)}">
+  <meta name="twitter:description" content="${escHtml(desc)}">
+  <meta name="twitter:image" content="${escHtml(ogImage)}">
+
+  <!-- Favicons -->
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon-16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/img/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="/img/icon-192.png">
+
   <link rel="stylesheet" href="/css/style.css">
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>👀</text></svg>">
 </head>
 <body>
   <nav class="nav">
     <div class="nav-inner">
-      <a href="/" class="nav-brand">👀 <strong>Glint</strong> Community</a>
+      <a href="/" class="nav-brand"><img src="/img/logo-header.png" alt="Glint" class="nav-logo"> <strong>Glint</strong> Community</a>
       <div class="nav-links">
         <a href="/">Gallery</a>
         <a href="/contribute">Contribute</a>
@@ -39,6 +65,7 @@ export function homePage(styles: any[], total: number, page: number, search: str
   return `
     <div class="hero">
       <div class="container">
+        <img src="/img/logo-trimmed.png" alt="Glint" class="hero-logo">
         <h1>Emotion packs for your Tidbyt.</h1>
         <p>Glint puts expressive eyes on your display. Pick a style, install it in one command.</p>
         <form class="search-form" action="/" method="get">
