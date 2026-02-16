@@ -352,12 +352,8 @@ a:hover { color: var(--accent-hover); }
   border-radius: 9999px;
 }
 
-.card-badges {
-  position: absolute;
-  bottom: 0.5rem;
-  right: 0.5rem;
-  z-index: 1;
-}
+.card-badges { display: none; }
+.card-tags { margin-top: 0.15rem; }
 
 .svg-link {
   font-size: 0.7rem;

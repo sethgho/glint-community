@@ -114,7 +114,8 @@ export function styleCard(style: any): string {
         ${previewUrl ? `<img src="${previewUrl}" alt="${escHtml(style.name)} preview" loading="lazy">` : '<div class="card-placeholder">👀</div>'}
       </div>
       <div class="card-body">
-        <h3 class="card-title">@${escHtml(style.author)}/${escHtml(style.slug)} ${animatedBadge}</h3>
+        <h3 class="card-title">@${escHtml(style.author)}/${escHtml(style.slug)}</h3>
+        ${animatedBadge ? `<div class="card-tags">${animatedBadge}</div>` : ''}
         <p class="card-desc">${escHtml(style.description || '')}</p>
         <div class="card-meta">
           <span>v${escHtml(style.version)}</span>
