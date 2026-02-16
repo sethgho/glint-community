@@ -143,7 +143,7 @@ export function stylePage(style: any, versions: any[]): string {
             <span class="badge">v${escHtml(style.version)}</span>
             ${animatedBadge}
             <span>⬇ ${style.download_count || 0} downloads</span>
-            <span>Published ${escHtml(style.published_at?.split('T')[0] || '')}</span>
+            <span>Published ${escHtml((style.published_at || '').split(/[T ]/)[0])}</span>
           </div>
         </div>
         ${style.author_avatar ? `<img src="${escHtml(style.author_avatar)}" class="author-avatar" alt="${escHtml(style.author)}">` : ''}
@@ -158,7 +158,7 @@ export function stylePage(style: any, versions: any[]): string {
       <h2>Emotions</h2>
       <p class="hint">✨ All glint styles are SVG — emotions scale perfectly to any size!</p>
       <div class="emotion-grid">
-        ${emotions.map((e: any) => {
+        ${sortEmotions(emotions).map((e: any) => {
           const imgUrl = `/api/styles/${escHtml(style.author)}/${escHtml(style.slug)}/emotions/${escHtml(e.emotion)}?version=${escHtml(style.version)}`;
           return `
             <div class="emotion-card">
@@ -530,6 +530,16 @@ function logoSvg(cssClass: string): string {
     <path class="glint-sparkle" fill="url(#sparkle-grad-${cssClass})" d="M2651 2698 c-6 -29 -22 -116 -36 -193 -29 -166 -46 -219 -69 -223 -10 -2 -40 6 -68 18 -27 12 -53 19 -56 15 -3 -3 4 -26 16 -50 43 -88 33 -96 -164 -145 -141 -35 -154 -39 -154 -50 0 -6 10 -12 23 -14 217 -46 317 -80 317 -109 0 -8 -11 -40 -25 -71 -14 -31 -25 -59 -25 -61 0 -2 21 5 47 16 26 11 58 19 72 17 35 -4 51 -54 92 -298 43 -256 51 -266 83 -93 40 220 67 347 81 373 16 31 26 31 109 -4 21 -9 40 -16 41 -16 2 0 -10 30 -26 68 l-29 67 21 18 c23 19 178 69 272 87 36 7 57 16 54 23 -2 7 -58 26 -125 43 -145 37 -212 61 -218 79 -3 7 2 27 10 44 9 17 21 42 26 56 l9 25 -52 -20 c-29 -11 -60 -20 -70 -20 -27 0 -44 51 -83 253 -19 100 -37 190 -40 200 -10 31 -22 18 -33 -35z"/>
   </g>
 </svg>`;
+}
+
+const EMOTION_ORDER = ['neutral', 'happy', 'sad', 'angry', 'surprised', 'worried', 'sleepy', 'excited', 'confused', 'focused'];
+
+function sortEmotions(emotions: any[]): any[] {
+  return [...emotions].sort((a, b) => {
+    const ai = EMOTION_ORDER.indexOf(a.emotion);
+    const bi = EMOTION_ORDER.indexOf(b.emotion);
+    return (ai === -1 ? 99 : ai) - (bi === -1 ? 99 : bi);
+  });
 }
 
 function escHtml(str: string): string {
