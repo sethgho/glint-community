@@ -31,6 +31,7 @@ app.use('/js/*', staticCache, serveStatic({ root: './public' }));
 app.use('/img/*', immutableCache, serveStatic({ root: './public' }));
 app.use('/favicon.ico', immutableCache, serveStatic({ path: './public/favicon.ico' }));
 app.use('/site.webmanifest', staticCache, serveStatic({ path: './public/site.webmanifest' }));
+app.use('/mockups/*', staticCache, serveStatic({ root: './' }));
 
 // Rate limiting
 app.use('/api/auth/*', rateLimit({ windowMs: 60_000, max: 20, message: 'Too many auth requests' }));

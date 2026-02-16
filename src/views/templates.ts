@@ -36,6 +36,7 @@ export function layout(title: string, body: string, meta?: { description?: strin
   <link rel="apple-touch-icon" sizes="180x180" href="/img/apple-touch-icon.png">
   <link rel="icon" type="image/png" sizes="192x192" href="/img/icon-192.png">
 
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/style.css?v=${Date.now()}">
 </head>
 <body>
@@ -131,6 +132,7 @@ export function styleCard(style: any): string {
 
   return `
     <a href="/styles/${escHtml(style.author)}/${escHtml(style.slug)}" class="card">
+      <div class="card-top"><span class="card-top-title">${escHtml(style.slug)}</span></div>
       <div class="card-preview">
         ${previewUrl ? `<img src="${previewUrl}" alt="${escHtml(style.name)} preview" loading="lazy">` : '<div class="card-placeholder">👀</div>'}
       </div>
@@ -446,12 +448,12 @@ function heroLogoSvg(): string {
   <!-- Animated pupils clipped to eye shapes -->
   <g clip-path="url(#left-eye-clip)">
     <g id="pupil-left">
-      <circle cx="168" cy="142" r="42" fill="var(--bg, #0a0a0b)"/>
+      <circle cx="168" cy="142" r="42" fill="var(--base, #1e1e2e)"/>
     </g>
   </g>
   <g clip-path="url(#right-eye-clip)">
     <g id="pupil-right">
-      <circle cx="386" cy="142" r="42" fill="var(--bg, #0a0a0b)"/>
+      <circle cx="386" cy="142" r="42" fill="var(--base, #1e1e2e)"/>
     </g>
   </g>
 </svg>

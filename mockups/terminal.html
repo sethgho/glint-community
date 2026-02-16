@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Glint Community — Terminal Theme</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+/* Catppuccin Mocha palette */
+:root {
+  --base: #1e1e2e;
+  --mantle: #181825;
+  --crust: #11111b;
+  --surface0: #313244;
+  --surface1: #45475a;
+  --surface2: #585b70;
+  --overlay0: #6c7086;
+  --overlay1: #7f849c;
+  --text: #cdd6f4;
+  --subtext0: #a6adc8;
+  --subtext1: #bac2de;
+  --lavender: #b4befe;
+  --blue: #89b4fa;
+  --sapphire: #74c7ec;
+  --green: #a6e3a1;
+  --teal: #94e2d5;
+  --yellow: #f9e2af;
+  --peach: #fab387;
+  --mauve: #cba6f7;
+  --red: #f38ba8;
+  --pink: #f5c2e7;
+  --rosewater: #f5e0dc;
+}
+
+body {
+  background: var(--base);
+  color: var(--text);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 14px;
+  line-height: 1.7;
+}
+a { color: var(--lavender); text-decoration: none; }
+a:hover { color: var(--mauve); text-decoration: underline; }
+::selection { background: var(--mauve); color: var(--crust); }
+
+/* NAV */
+nav {
+  padding: 16px 24px;
+  border-bottom: 1px solid var(--surface0);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--mantle);
+}
+.nav-brand {
+  color: var(--text);
+  font-weight: 700;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.nav-brand .logo-emoji { font-size: 20px; }
+.nav-links { display: flex; gap: 24px; align-items: center; }
+.nav-links a { color: var(--subtext0); font-size: 13px; }
+.nav-links a:hover { color: var(--text); text-decoration: none; }
+.nav-links .btn-signin {
+  color: var(--base);
+  background: var(--lavender);
+  padding: 6px 14px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 700;
+}
+.nav-links .btn-signin:hover { background: var(--mauve); }
+
+/* HERO */
+.hero {
+  padding: 64px 24px 48px;
+  text-align: center;
+  background: radial-gradient(ellipse at center, var(--mantle) 0%, var(--base) 70%);
+  border-bottom: 1px solid var(--surface0);
+}
+.hero .logo { font-size: 48px; margin-bottom: 12px; display: block; }
+.hero h1 {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  color: var(--text);
+  letter-spacing: 1px;
+}
+.hero .subtitle {
+  color: var(--subtext0);
+  max-width: 560px;
+  margin: 0 auto 32px;
+  font-size: 13px;
+}
+
+/* SEARCH — clean, no gimmicks */
+.search-wrap { max-width: 480px; margin: 0 auto; }
+.search-wrap input {
+  width: 100%;
+  padding: 12px 16px;
+  background: var(--surface0);
+  color: var(--text);
+  border: 1px solid var(--surface1);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 14px;
+  outline: none;
+  border-radius: 4px;
+}
+.search-wrap input::placeholder { color: var(--overlay0); }
+.search-wrap input:focus { border-color: var(--lavender); box-shadow: 0 0 8px rgba(180,190,254,0.15); }
+
+/* SECTION */
+.section-header {
+  padding: 32px 24px 16px;
+  max-width: 1200px;
+  margin: 0 auto;
+  color: var(--subtext0);
+  font-size: 13px;
+}
+.section-header .count { color: var(--lavender); }
+
+/* GRID */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 16px;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px 64px;
+}
+
+/* CARD — terminal window style */
+.card {
+  background: var(--mantle);
+  border: 1px solid var(--surface0);
+  font-size: 13px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  display: block;
+  color: var(--text);
+}
+.card:hover {
+  border-color: var(--lavender);
+  box-shadow: 0 0 12px rgba(180,190,254,0.08);
+  text-decoration: none;
+  color: var(--text);
+}
+.card-top {
+  padding: 8px 16px;
+  border-bottom: 1px solid var(--surface0);
+  background: var(--crust);
+}
+.card-top .title { color: var(--overlay0); font-size: 11px; }
+
+.card-body { padding: 16px; }
+.card-body .preview {
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  margin: 4px 0 12px;
+}
+.card-body h3 { color: var(--text); font-size: 14px; margin-bottom: 2px; }
+.card-body .author { color: var(--overlay1); font-size: 12px; margin-bottom: 8px; }
+.card-body .desc { color: var(--subtext0); font-size: 12px; margin-bottom: 12px; }
+.card-meta {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  color: var(--overlay0);
+  border-top: 1px dashed var(--surface0);
+  padding-top: 8px;
+  margin-top: 8px;
+}
+.card-meta .ver { color: var(--green); }
+.card-meta .dl { color: var(--blue); }
+.card-meta .dl::before { content: '↓ '; }
+.install { font-size: 11px; color: var(--overlay0); margin-top: 8px; }
+.install code { color: var(--sapphire); }
+
+/* FOOTER */
+footer {
+  border-top: 1px solid var(--surface0);
+  padding: 24px;
+  text-align: center;
+  font-size: 12px;
+  color: var(--overlay0);
+  background: var(--mantle);
+}
+footer a { color: var(--subtext0); }
+footer a:hover { color: var(--lavender); }
+
+/* MOBILE */
+@media (max-width: 640px) {
+  nav { padding: 12px 16px; }
+  .nav-brand { font-size: 14px; }
+  .nav-links { gap: 12px; }
+  .nav-links a { font-size: 12px; }
+  .hero { padding: 40px 16px 32px; }
+  .hero h1 { font-size: 22px; }
+  .hero .logo { font-size: 36px; }
+  .grid { grid-template-columns: 1fr; padding: 0 16px 40px; }
+  .section-header { padding: 24px 16px 12px; }
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-brand">
+    <span class="logo-emoji">👀</span>
+    Glint Community
+  </div>
+  <div class="nav-links">
+    <a href="#">Gallery</a>
+    <a href="#">Contribute</a>
+    <a href="#" class="btn-signin">Sign in with GitHub</a>
+  </div>
+</nav>
+
+<div class="hero">
+  <span class="logo">👀</span>
+  <h1>Glint Community</h1>
+  <p class="subtitle">Emotion packs for your Tidbyt. Glint puts expressive eyes on your display.</p>
+  <div class="search-wrap">
+    <input type="text" placeholder="Search styles...">
+  </div>
+</div>
+
+<div class="section-header">
+  <span class="count">8</span> styles available
+</div>
+
+<div class="grid">
+  <a class="card" href="#">
+    <div class="card-top"><span class="title">minimal</span></div>
+    <div class="card-body">
+      <div class="preview">👀</div>
+      <h3>minimal</h3>
+      <div class="author">@sethgho</div>
+      <div class="desc">Clean, simple eyes — the classic glint look</div>
+      <div class="card-meta"><span class="ver">v1.0.0</span><span class="dl">46</span></div>
+      <div class="install"><code>glint install sethgho/minimal</code></div>
+    </div>
+  </a>
+  <a class="card" href="#">
+    <div class="card-top"><span class="title">kawaii</span></div>
+    <div class="card-body">
+      <div class="preview">🌸</div>
+      <h3>kawaii</h3>
+      <div class="author">@heidihowilson</div>
+      <div class="desc">Cute anime-inspired eyes with colored irises, sparkles, and blush marks</div>
+      <div class="card-meta"><span class="ver">v1.0.0</span><span class="dl">32</span></div>
+      <div class="install"><code>glint install heidihowilson/kawaii</code></div>
+    </div>
+  </a>
+  <a class="card" href="#">
+    <div class="card-top"><span class="title">cyberpunk</span></div>
+    <div class="card-body">
+      <div class="preview">🔮</div>
+      <h3>cyberpunk</h3>
+      <div class="author">@sethgho</div>
+      <div class="desc">Neon-lit cyberpunk eyes with glowing cyan and magenta</div>
+      <div class="card-meta"><span class="ver">v1.1.0</span><span class="dl">3</span></div>
+      <div class="install"><code>glint install sethgho/cyberpunk</code></div>
+    </div>
+  </a>
+  <a class="card" href="#">
+    <div class="card-top"><span class="title">retro</span></div>
+    <div class="card-body">
+      <div class="preview">👾</div>
+      <h3>retro</h3>
+      <div class="author">@sethgho</div>
+      <div class="desc">Retro 8-bit green phosphor terminal eyes</div>
+      <div class="card-meta"><span class="ver">v1.0.0</span><span class="dl">1</span></div>
+      <div class="install"><code>glint install sethgho/retro</code></div>
+    </div>
+  </a>
+  <a class="card" href="#">
+    <div class="card-top"><span class="title">spooky</span></div>
+    <div class="card-body">
+      <div class="preview">👻</div>
+      <h3>spooky</h3>
+      <div class="author">@sethgho</div>
+      <div class="desc">Halloween jack-o-lantern triangle eyes with eerie glow</div>
+      <div class="card-meta"><span class="ver">v1.0.0</span><span class="dl">0</span></div>
+      <div class="install"><code>glint install sethgho/spooky</code></div>
+    </div>
+  </a>
+  <a class="card" href="#">
+    <div class="card-top"><span class="title">steampunk</span></div>
+    <div class="card-body">
+      <div class="preview">⚙️</div>
+      <h3>steampunk</h3>
+      <div class="author">@sethgho</div>
+      <div class="desc">Brass and copper mechanical eyes with Victorian gear aesthetics</div>
+      <div class="card-meta"><span class="ver">v1.0.0</span><span class="dl">0</span></div>
+      <div class="install"><code>glint install sethgho/steampunk</code></div>
+    </div>
+  </a>
+  <a class="card" href="#">
+    <div class="card-top"><span class="title">ocean</span></div>
+    <div class="card-body">
+      <div class="preview">🌊</div>
+      <h3>ocean</h3>
+      <div class="author">@sethgho</div>
+      <div class="desc">Deep sea bioluminescent eyes glowing in the abyss</div>
+      <div class="card-meta"><span class="ver">v1.0.0</span><span class="dl">0</span></div>
+      <div class="install"><code>glint install sethgho/ocean</code></div>
+    </div>
+  </a>
+  <a class="card" href="#">
+    <div class="card-top"><span class="title">forest</span></div>
+    <div class="card-body">
+      <div class="preview">🌲</div>
+      <h3>forest</h3>
+      <div class="author">@sethgho</div>
+      <div class="desc">Earthy woodland eyes in mossy greens</div>
+      <div class="card-meta"><span class="ver">v1.0.0</span><span class="dl">0</span></div>
+      <div class="install"><code>glint install sethgho/forest</code></div>
+    </div>
+  </a>
+</div>
+
+<footer>Glint Community © 2026 · <a href="#">GitHub</a> · <a href="#">Docs</a> · Built for <a href="https://tidbyt.com">Tidbyt</a></footer>
+
+</body>
+</html>
