@@ -55,6 +55,9 @@ a:hover { color: var(--accent-hover); }
 .nav-links a:hover { color: var(--text); }
 .nav-user { display: flex; align-items: center; gap: 0.4rem; }
 .nav-avatar { width: 24px; height: 24px; border-radius: 50%; }
+.nav-icon { width: 20px; height: 20px; display: block; }
+.nav-icon-link { color: var(--text-muted); }
+.nav-icon-link:hover { color: var(--text); }
 .nav-links .btn { margin-left: 0.5rem; }
 
 /* Hero */
