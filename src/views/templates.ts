@@ -112,10 +112,9 @@ export function styleCard(style: any): string {
     <a href="/styles/${escHtml(style.author)}/${escHtml(style.slug)}" class="card">
       <div class="card-preview">
         ${previewUrl ? `<img src="${previewUrl}" alt="${escHtml(style.name)} preview" loading="lazy">` : '<div class="card-placeholder">👀</div>'}
-        ${animatedBadge ? `<div class="card-badges">${animatedBadge}</div>` : ''}
       </div>
       <div class="card-body">
-        <h3 class="card-title">@${escHtml(style.author)}/${escHtml(style.slug)}</h3>
+        <h3 class="card-title">@${escHtml(style.author)}/${escHtml(style.slug)} ${animatedBadge}</h3>
         <p class="card-desc">${escHtml(style.description || '')}</p>
         <div class="card-meta">
           <span>v${escHtml(style.version)}</span>
