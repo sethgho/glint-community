@@ -70,7 +70,7 @@ a:hover { color: var(--mauve); text-decoration: underline; }
   justify-content: space-between;
   align-items: center;
 }
-.nav-brand { color: var(--text); font-size: 16px; display: flex; align-items: center; gap: 0; white-space: nowrap; font-weight: 700; }
+.nav-brand { color: var(--text); font-size: 16px; display: flex; align-items: center; gap: 0; white-space: nowrap; font-weight: 700; line-height: 1; }
 .nav-brand:hover { color: var(--text); text-decoration: none; }
 .nav-logo { height: 28px; color: var(--text); display: inline-block; vertical-align: middle; width: 0; opacity: 0; overflow: hidden; margin-right: 0; }
 .nav-logo.nav-logo-visible { animation: logoSlideIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
@@ -179,12 +179,10 @@ a:hover { color: var(--mauve); text-decoration: underline; }
   align-items: center;
   justify-content: center;
   background: #000;
-  image-rendering: pixelated;
 }
 .card-preview > img { overflow: hidden; }
 .card-preview img {
   height: 80px;
-  image-rendering: pixelated;
 }
 .card-placeholder { font-size: 2rem; }
 .card-body { padding: 16px; }
@@ -243,7 +241,7 @@ a:hover { color: var(--mauve); text-decoration: underline; }
 /* Emotion grid */
 .emotion-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
   gap: 1rem;
   margin: 1rem 0 2rem;
 }
@@ -255,16 +253,15 @@ a:hover { color: var(--mauve); text-decoration: underline; }
   gap: 0.5rem;
   background: var(--mantle);
   border: 1px solid var(--surface0);
-  padding: 0.75rem;
+  padding: 1rem;
   text-align: center;
   transition: border-color 0.2s;
 }
 .emotion-card:hover { border-color: var(--lavender); }
 .emotion-img {
   display: block;
-  width: 64px;
-  height: 32px;
-  image-rendering: pixelated;
+  width: 128px;
+  height: 64px;
 }
 .emotion-label {
   display: inline-block;
@@ -405,9 +402,9 @@ dialog.report-modal .report-form textarea { resize: vertical; }
 
   .install-box { flex-direction: column; align-items: flex-start; }
   .install-cmd { font-size: 11px; word-break: break-all; }
-  .emotion-grid { grid-template-columns: repeat(3, 1fr); gap: 0.5rem; }
-  .emotion-card { padding: 0.5rem; }
-  .emotion-img { width: 48px; height: 24px; }
+  .emotion-grid { grid-template-columns: repeat(2, 1fr); gap: 0.75rem; }
+  .emotion-card { padding: 0.75rem; }
+  .emotion-img { width: 96px; height: 48px; }
 
   .versions-table { font-size: 12px; }
   .versions-table th, .versions-table td { padding: 0.4rem; }

@@ -127,7 +127,7 @@ export function homePage(styles: any[], total: number, page: number, search: str
 }
 
 export function styleCard(style: any): string {
-  const previewUrl = `/api/styles/${escHtml(style.author)}/${escHtml(style.slug)}/emotions/happy?version=${escHtml(style.version)}`;
+  const previewUrl = `/api/styles/${escHtml(style.author)}/${escHtml(style.slug)}/emotions/happy?version=${escHtml(style.version)}&format=svg`;
   const animatedBadge = style.animated ? '<span class="badge badge-animated">✨ Animated</span>' : '';
 
   return `
@@ -181,7 +181,7 @@ export function stylePage(style: any, versions: any[]): string {
       <h2>Emotions</h2>
       <div class="emotion-grid">
         ${sortEmotions(emotions).map((e: any) => {
-          const imgUrl = `/api/styles/${escHtml(style.author)}/${escHtml(style.slug)}/emotions/${escHtml(e.emotion)}?version=${escHtml(style.version)}`;
+          const imgUrl = `/api/styles/${escHtml(style.author)}/${escHtml(style.slug)}/emotions/${escHtml(e.emotion)}?version=${escHtml(style.version)}&format=svg`;
           return `
             <div class="emotion-card">
               <img src="${imgUrl}" alt="${escHtml(e.emotion)}" class="emotion-img">
@@ -545,7 +545,7 @@ function heroLogoSvg(): string {
 }
 
 function logoSvg(cssClass: string): string {
-  return `<svg class="${cssClass}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 534 275">
+  return `<svg class="${cssClass}" xmlns="http://www.w3.org/2000/svg" viewBox="0 95 534 180">
   <defs>
     <linearGradient id="sparkle-grad-${cssClass}" x1="0" y1="0" x2="0" y2="1">
       <stop offset="0%" stop-color="#fde68a"/>
