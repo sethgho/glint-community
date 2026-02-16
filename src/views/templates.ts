@@ -41,7 +41,7 @@ export function layout(title: string, body: string, meta?: { description?: strin
 <body>
   <nav class="nav">
     <div class="nav-inner">
-      <a href="/" class="nav-brand">${logoSvg('nav-logo')} <strong>Glint</strong> Community</a>
+      <a href="/" class="nav-brand">${logoSvg('nav-logo')} <strong>Glint</strong> <span class="nav-hide-mobile">Community</span></a>
       <div class="nav-links">
         <a href="/" class="nav-hide-mobile">Gallery</a>
         <a href="/contribute" class="nav-hide-mobile">Contribute</a>
