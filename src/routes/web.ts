@@ -30,6 +30,7 @@ web.get('/', async (c) => {
     homePage(result.styles, result.total, page, search),
     undefined, user
   );
+  c.header('Cache-Control', 'public, s-maxage=3600, max-age=300');
   return c.html(html);
 });
 
@@ -54,12 +55,14 @@ web.get('/styles/:author/:slug', async (c) => {
     },
     user
   );
+  c.header('Cache-Control', 'public, s-maxage=3600, max-age=300');
   return c.html(html);
 });
 
 /** Contribute page */
 web.get('/contribute', async (c) => {
   const user = c.get('sessionUser');
+  c.header('Cache-Control', 'public, s-maxage=86400, max-age=3600');
   return c.html(layout('Contribute — Glint Community', contributePage(), undefined, user));
 });
 
