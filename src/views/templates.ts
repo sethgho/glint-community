@@ -2,7 +2,7 @@
  * HTML templates for the web gallery (SSR, no framework)
  */
 
-export function layout(title: string, body: string, meta?: { description?: string; url?: string; image?: string }): string {
+export function layout(title: string, body: string, meta?: { description?: string; url?: string; image?: string }, user?: any): string {
   const desc = meta?.description || 'Emotion packs for your Tidbyt. Expressive eyes on a 64×32 pixel display.';
   const url = meta?.url || 'https://glint.sethgholson.com';
   const ogImage = meta?.image || 'https://glint.sethgholson.com/img/og-image.png';
@@ -46,6 +46,15 @@ export function layout(title: string, body: string, meta?: { description?: strin
         <a href="/">Gallery</a>
         <a href="/contribute">Contribute</a>
         <a href="https://github.com/sethgho/glint" target="_blank">GitHub</a>
+        ${user ? `
+          <a href="/dashboard">Dashboard</a>
+          <a href="/api/auth/logout" class="nav-user">
+            ${user.avatar_url ? `<img src="${escHtml(user.avatar_url)}" class="nav-avatar" alt="${escHtml(user.username)}">` : ''}
+            <span>${escHtml(user.username)}</span>
+          </a>
+        ` : `
+          <a href="/api/auth/login" class="btn btn-sm">Sign in</a>
+        `}
       </div>
     </div>
   </nav>
@@ -265,6 +274,90 @@ glint auth token create --name "my-ci"
 
 # Use it in scripts
 GLINT_TOKEN=glint_xxx glint style publish my-style</code></pre>
+    </div>`;
+}
+
+export function dashboardPage(user: any, styles: any[]): string {
+  return `
+    <div class="container" style="padding-top:2rem;">
+      <div style="display:flex;align-items:center;gap:1rem;margin-bottom:2rem;">
+        ${user.avatar_url ? `<img src="${escHtml(user.avatar_url)}" style="width:64px;height:64px;border-radius:50%;" alt="">` : ''}
+        <div>
+          <h1 style="margin:0;">Dashboard</h1>
+          <p style="margin:0;color:var(--text-muted);">@${escHtml(user.username)}</p>
+        </div>
+      </div>
+
+      <div style="display:flex;gap:1rem;margin-bottom:2rem;">
+        <a href="/dashboard" class="btn btn-primary">My Styles</a>
+        <a href="/dashboard/tokens" class="btn">API Tokens</a>
+      </div>
+
+      <h2>Your Published Styles</h2>
+      ${styles.length === 0 ? `
+        <div class="empty-state">
+          <p class="empty-icon">📦</p>
+          <h3>No styles published yet</h3>
+          <p>Use the CLI to publish your first style!</p>
+          <a href="/contribute" class="btn btn-primary">Learn How</a>
+        </div>
+      ` : `
+        <div class="grid">
+          ${styles.map((s: any) => styleCard(s)).join('')}
+        </div>
+      `}
+    </div>`;
+}
+
+export function tokensPage(user: any, tokens: any[], newToken?: string): string {
+  return `
+    <div class="container" style="padding-top:2rem;">
+      <h1>API Tokens</h1>
+      <p style="color:var(--text-muted);">Use API tokens to authenticate the Glint CLI or automation scripts.</p>
+
+      <div style="display:flex;gap:1rem;margin-bottom:2rem;">
+        <a href="/dashboard" class="btn">My Styles</a>
+        <a href="/dashboard/tokens" class="btn btn-primary">API Tokens</a>
+      </div>
+
+      ${newToken ? `
+        <div style="background:var(--surface);border:1px solid var(--accent);border-radius:8px;padding:1rem;margin-bottom:1.5rem;">
+          <strong>🔑 New token created!</strong> Copy it now — it won't be shown again.
+          <div style="margin-top:0.5rem;">
+            <code style="word-break:break-all;font-size:0.85rem;">${escHtml(newToken)}</code>
+            <button onclick="navigator.clipboard.writeText('${escHtml(newToken)}')" class="btn btn-sm" style="margin-left:0.5rem;">Copy</button>
+          </div>
+        </div>
+      ` : ''}
+
+      <h2>Create Token</h2>
+      <form method="POST" action="/dashboard/tokens" style="display:flex;gap:0.5rem;margin-bottom:2rem;">
+        <input type="text" name="name" placeholder="Token name (e.g. my-laptop)" class="search-input" style="max-width:300px;" required>
+        <button type="submit" class="btn btn-primary">Create</button>
+      </form>
+
+      <h2>Active Tokens</h2>
+      ${tokens.length === 0 ? `
+        <p style="color:var(--text-muted);">No tokens yet.</p>
+      ` : `
+        <table class="versions-table">
+          <thead><tr><th>Name</th><th>Created</th><th>Last Used</th><th></th></tr></thead>
+          <tbody>
+            ${tokens.map((t: any) => `
+              <tr>
+                <td>${escHtml(t.name)}</td>
+                <td>${escHtml(t.created_at?.split('T')[0] || '')}</td>
+                <td>${t.last_used_at ? escHtml(t.last_used_at.split('T')[0]) : 'Never'}</td>
+                <td>
+                  <form method="POST" action="/dashboard/tokens/${escHtml(t.id)}/revoke" style="display:inline;" onsubmit="return confirm('Revoke this token?')">
+                    <button type="submit" class="btn btn-sm" style="color:var(--danger,#ef4444);">Revoke</button>
+                  </form>
+                </td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+      `}
     </div>`;
 }
 

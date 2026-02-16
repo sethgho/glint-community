@@ -1,11 +1,76 @@
 /**
- * Auth API routes (GitHub Device Flow + token management)
+ * Auth API routes (GitHub Device Flow + Web OAuth + token management)
  */
 import { Hono } from 'hono';
-import { startDeviceFlow, pollDeviceFlow, getGitHubUser, upsertUser, createApiToken, listTokens, revokeToken } from '../lib/auth';
+import { startDeviceFlow, pollDeviceFlow, getGitHubUser, upsertUser, createApiToken, listTokens, revokeToken, GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET } from '../lib/auth';
 import { requireAuth } from '../middleware/auth';
+import { createOAuthState, validateOAuthState, createSession, setSessionCookie, destroySession, clearSessionCookie } from '../middleware/session';
 
 const auth = new Hono();
+
+/** Web OAuth: redirect to GitHub */
+auth.get('/login', async (c) => {
+  const state = createOAuthState();
+  const params = new URLSearchParams({
+    client_id: GITHUB_CLIENT_ID,
+    redirect_uri: 'https://glint.sethgholson.com/api/auth/callback',
+    scope: 'read:user',
+    state,
+  });
+  return c.redirect(`https://github.com/login/oauth/authorize?${params}`);
+});
+
+/** Web OAuth: callback from GitHub */
+auth.get('/callback', async (c) => {
+  const code = c.req.query('code');
+  const state = c.req.query('state');
+  const error = c.req.query('error');
+
+  if (error) {
+    return c.redirect('/?error=auth_denied');
+  }
+
+  if (!code || !state || !validateOAuthState(state)) {
+    return c.redirect('/?error=invalid_state');
+  }
+
+  try {
+    // Exchange code for access token
+    const tokenRes = await fetch('https://github.com/login/oauth/access_token', {
+      method: 'POST',
+      headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        client_id: GITHUB_CLIENT_ID,
+        client_secret: GITHUB_CLIENT_SECRET,
+        code,
+      }),
+    });
+    const tokenData = await tokenRes.json() as any;
+
+    if (!tokenData.access_token) {
+      return c.redirect('/?error=token_exchange_failed');
+    }
+
+    // Get GitHub user info
+    const ghUser = await getGitHubUser(tokenData.access_token);
+    const user = upsertUser(ghUser.id, ghUser.login, ghUser.name, ghUser.avatar_url);
+
+    // Create session
+    const sessionId = createSession(user);
+    setSessionCookie(c, sessionId);
+
+    return c.redirect('/dashboard');
+  } catch (e: any) {
+    console.error('OAuth callback error:', e);
+    return c.redirect('/?error=auth_failed');
+  }
+});
+
+/** Web OAuth: logout */
+auth.get('/logout', async (c) => {
+  clearSessionCookie(c);
+  return c.redirect('/');
+});
 
 /** Start GitHub Device Flow */
 auth.post('/device/code', async (c) => {
