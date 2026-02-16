@@ -47,7 +47,7 @@ a:hover { color: var(--accent-hover); }
   align-items: center;
   align-items: center;
 }
-.nav-brand { color: var(--text); font-size: 1.2rem; display: flex; align-items: center; gap: 0; }
+.nav-brand { color: var(--text); font-size: 1.2rem; display: flex; align-items: center; gap: 0; white-space: nowrap; }
 .nav-brand:hover { color: var(--text); }
 .nav-logo { height: 28px; color: var(--text); display: inline-block; vertical-align: middle; width: 0; opacity: 0; overflow: hidden; margin-right: 0; }
 .nav-logo.nav-logo-visible { animation: logoSlideIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
@@ -306,8 +306,7 @@ dialog.report-modal .report-form textarea { resize: vertical; }
     flex-wrap: nowrap;
     gap: 0.25rem;
   }
-  .nav-brand { font-size: 0.95rem; gap: 0.3rem; white-space: nowrap; min-width: 0; }
-  .nav-brand strong { display: none; } /* Hide "Glint" text, keep logo */
+  .nav-brand { font-size: 0.95rem; gap: 0; white-space: nowrap; min-width: 0; }
   .nav-logo { height: 20px; }
   .nav-links {
     gap: 0.5rem;
