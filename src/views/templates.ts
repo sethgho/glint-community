@@ -43,8 +43,8 @@ export function layout(title: string, body: string, meta?: { description?: strin
     <div class="nav-inner">
       <a href="/" class="nav-brand">${logoSvg('nav-logo')} <strong>Glint</strong> Community</a>
       <div class="nav-links">
-        <a href="/">Gallery</a>
-        <a href="/contribute">Contribute</a>
+        <a href="/" class="nav-hide-mobile">Gallery</a>
+        <a href="/contribute" class="nav-hide-mobile">Contribute</a>
         <a href="https://github.com/sethgho/glint" target="_blank">GitHub</a>
         ${user ? `
           <a href="/dashboard">Dashboard</a>
