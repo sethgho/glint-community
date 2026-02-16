@@ -64,6 +64,7 @@ styles.get('/:author/:slug/download', async (c) => {
     size: e.file_size,
   }));
 
+  c.header('Cache-Control', 'public, s-maxage=300, max-age=60');
   return c.json({
     name: style.name,
     slug: style.slug,
