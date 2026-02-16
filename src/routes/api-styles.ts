@@ -1,13 +1,15 @@
 /**
- * Style API routes (browse, publish, download, report)
+ * Style API routes (browse, publish, download, report, rasterize)
  */
 import { Hono } from 'hono';
 import { requireAuth, optionalAuth, requireScope } from '../middleware/auth';
 import { listStyles, getStyle, getStyleVersions, publishStyle, incrementDownloads, yankStyle, reportStyle } from '../lib/styles';
-import { validateManifest, REQUIRED_EMOTIONS, MAX_FILE_SIZE, EXPECTED_WIDTH, EXPECTED_HEIGHT } from '../lib/package-spec';
+import { validateManifest, REQUIRED_EMOTIONS, MAX_FILE_SIZE_PNG, MAX_FILE_SIZE_SVG, EXPECTED_WIDTH, EXPECTED_HEIGHT } from '../lib/package-spec';
+import { Resvg } from '@resvg/resvg-js';
 import { createHash } from 'crypto';
-import { readFileSync, existsSync } from 'fs';
+import { readFileSync, existsSync, mkdirSync } from 'fs';
 import { join } from 'path';
+import sharp from 'sharp';
 
 const styles = new Hono();
 
@@ -74,10 +76,13 @@ styles.get('/:author/:slug/download', async (c) => {
   });
 });
 
-/** Download individual emotion PNG */
+/** Download individual emotion (SVG or PNG) */
 styles.get('/:author/:slug/emotions/:emotion', async (c) => {
   const { author, slug, emotion } = c.req.param();
   const version = c.req.query('version');
+  const format = c.req.query('format') || 'auto'; // auto, svg, png
+  const width = parseInt(c.req.query('width') || '64');
+  const height = parseInt(c.req.query('height') || '32');
   
   const style = getStyle(author, slug, version || undefined) as any;
   if (!style) {
@@ -91,21 +96,84 @@ styles.get('/:author/:slug/emotions/:emotion', async (c) => {
 
   // Find the file on disk
   const uploadsDir = process.env.GLINT_UPLOADS_DIR || join(process.cwd(), 'data', 'uploads');
-  const filePath = join(uploadsDir, author, slug, style.version, `${emotion}.png`);
+  const baseDir = join(uploadsDir, author, slug, style.version);
   
-  if (!existsSync(filePath)) {
+  const svgPath = join(baseDir, `${emotion}.svg`);
+  const pngPath = join(baseDir, `${emotion}.png`);
+  
+  const hasSVG = existsSync(svgPath);
+  const hasPNG = existsSync(pngPath);
+  
+  if (!hasSVG && !hasPNG) {
     return c.json({ error: 'File not found on disk' }, 500);
   }
-
-  const buffer = readFileSync(filePath);
-  return new Response(buffer, {
-    headers: {
-      'Content-Type': 'image/png',
-      'Content-Disposition': `inline; filename="${emotion}.png"`,
-      'Cache-Control': 'public, max-age=31536000, immutable',
-      'ETag': `"${emotionData.file_hash}"`,
-    },
-  });
+  
+  // If requesting SVG and we have it, serve it directly
+  if (format === 'svg' && hasSVG) {
+    const buffer = readFileSync(svgPath);
+    return new Response(buffer, {
+      headers: {
+        'Content-Type': 'image/svg+xml',
+        'Content-Disposition': `inline; filename="${emotion}.svg"`,
+        'Cache-Control': 'public, max-age=31536000, immutable',
+        'ETag': `"${emotionData.file_hash}"`,
+      },
+    });
+  }
+  
+  // If requesting PNG (or auto) and need to rasterize SVG
+  if ((format === 'png' || format === 'auto') && hasSVG) {
+    // Check cache first
+    const cacheDir = join(process.cwd(), 'data', 'cache', 'raster', `${width}x${height}`);
+    const cacheKey = `${author}-${slug}-${style.version}-${emotion}.png`;
+    const cachePath = join(cacheDir, cacheKey);
+    
+    let buffer: Buffer;
+    if (existsSync(cachePath)) {
+      buffer = readFileSync(cachePath);
+    } else {
+      // Rasterize SVG
+      const svgContent = readFileSync(svgPath, 'utf-8');
+      const resvg = new Resvg(svgContent, {
+        fitTo: { mode: 'width', value: width },
+      });
+      const pngData = resvg.render();
+      buffer = pngData.asPng();
+      
+      // Cache it
+      mkdirSync(cacheDir, { recursive: true });
+      require('fs').writeFileSync(cachePath, buffer);
+    }
+    
+    return new Response(buffer, {
+      headers: {
+        'Content-Type': 'image/png',
+        'Content-Disposition': `inline; filename="${emotion}.png"`,
+        'Cache-Control': 'public, max-age=86400',
+      },
+    });
+  }
+  
+  // Fall back to PNG
+  if (hasPNG) {
+    let buffer = readFileSync(pngPath);
+    
+    // Resize if needed
+    if (width !== EXPECTED_WIDTH || height !== EXPECTED_HEIGHT) {
+      buffer = await sharp(buffer).resize(width, height, { fit: 'fill' }).png().toBuffer();
+    }
+    
+    return new Response(buffer, {
+      headers: {
+        'Content-Type': 'image/png',
+        'Content-Disposition': `inline; filename="${emotion}.png"`,
+        'Cache-Control': 'public, max-age=31536000, immutable',
+        'ETag': `"${emotionData.file_hash}"`,
+      },
+    });
+  }
+  
+  return c.json({ error: 'Unsupported format conversion' }, 400);
 });
 
 /** Publish a style (multipart form: manifest JSON + PNG files) */
@@ -143,6 +211,11 @@ styles.post('/', requireAuth, requireScope('publish'), async (c) => {
     return c.json({ error: 'Rate limit: max 10 publishes per day' }, 429);
   }
 
+  // Determine format
+  const format = manifest.format || 'png'; // default to png for backward compat
+  const extension = format === 'svg' ? '.svg' : '.png';
+  const maxFileSize = format === 'svg' ? MAX_FILE_SIZE_SVG : MAX_FILE_SIZE_PNG;
+  
   // Extract emotion files
   const emotions = new Map<string, Buffer>();
   
@@ -152,15 +225,15 @@ styles.post('/', requireAuth, requireScope('publish'), async (c) => {
       return c.json({ error: `Missing file for emotion: ${emotionName}` }, 400);
     }
 
-    if (file.size > MAX_FILE_SIZE) {
-      return c.json({ error: `File too large for ${emotionName}: ${file.size} > ${MAX_FILE_SIZE}` }, 400);
+    if (file.size > maxFileSize) {
+      return c.json({ error: `File too large for ${emotionName}: ${file.size} > ${maxFileSize}` }, 400);
     }
 
     const buffer = Buffer.from(await file.arrayBuffer());
     
     // Verify hash matches manifest
     const hash = createHash('sha256').update(buffer).digest('hex');
-    const expectedHash = manifest.files[`${emotionName}.png`];
+    const expectedHash = manifest.files[`${emotionName}${extension}`];
     if (expectedHash && hash !== expectedHash) {
       return c.json({ error: `Hash mismatch for ${emotionName}: expected ${expectedHash}, got ${hash}` }, 400);
     }
@@ -185,6 +258,8 @@ styles.post('/', requireAuth, requireScope('publish'), async (c) => {
       readme,
       emotions,
       previewGif,
+      format: manifest.format || 'png',
+      animated: manifest.animated || false,
     });
 
     return c.json({

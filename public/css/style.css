@@ -327,3 +327,75 @@ a:hover { color: var(--accent-hover); }
   /* Footer */
   .footer { font-size: 0.8rem; padding: 1.5rem 1rem; }
 }
+
+/* SVG/Raster/Animated badges */
+.badge-svg {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.badge-raster {
+  background: var(--surface-3, #2a2a2e);
+  color: var(--text-muted);
+}
+
+.badge-animated {
+  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  color: white;
+}
+
+.card-badges {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  display: flex;
+  gap: 0.25rem;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.svg-link {
+  font-size: 0.7rem;
+  color: var(--accent);
+  text-decoration: none;
+  opacity: 0.8;
+}
+
+.svg-link:hover {
+  opacity: 1;
+}
+
+.scale-demo {
+  margin-top: 2rem;
+  padding: 1.5rem;
+  background: var(--surface);
+  border-radius: var(--radius);
+}
+
+.scale-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.scale-grid > div {
+  text-align: center;
+  padding: 1rem;
+  background: var(--bg);
+  border-radius: var(--radius);
+}
+
+.scale-grid img {
+  display: block;
+  margin: 0 auto 0.5rem;
+  background: var(--surface);
+  padding: 0.5rem;
+  border-radius: 4px;
+}
+
+.hint {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  margin-bottom: 1rem;
+}

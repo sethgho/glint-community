@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@hono/node-server": "^1.14.3",
+    "@resvg/resvg-js": "^2.6.2",
     "hono": "^4.7.12",
     "nanoid": "^5.1.6"
   },
