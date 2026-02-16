@@ -135,7 +135,44 @@ bun install --production
 bun run src/index.ts
 ```
 
-## Contributing
+## Contributing Styles
+
+Want to publish your own emotion style to the gallery? You just need **glint** installed:
+
+### Install glint
+
+```bash
+# Standalone binary (macOS Apple Silicon shown — see glint README for all platforms)
+curl -L https://github.com/sethgho/glint/releases/latest/download/glint-darwin-arm64.tar.gz | tar xz
+sudo mv glint-darwin-arm64 /usr/local/bin/glint
+
+# Or via npm/bun
+npm install -g @sethgho/glint
+```
+
+### Create & publish a style
+
+```bash
+# Scaffold a new style
+glint style init my-style
+
+# Or generate one with AI
+glint generate my-style --aesthetic "watercolor soft pastels"
+
+# Preview it
+glint show happy --style my-style --preview /tmp/preview.gif
+
+# Validate
+glint validate my-style
+
+# Authenticate & publish
+glint auth login
+glint style publish my-style
+```
+
+Your style will appear in the [gallery](https://glint.sethgholson.com) and be installable via `glint style install @you/my-style`.
+
+### Contributing to the platform
 
 1. Fork it
 2. Create your feature branch (`git checkout -b feature/cool-thing`)
@@ -145,7 +182,7 @@ bun run src/index.ts
 
 ## Related
 
-- **[glint](https://github.com/sethgho/glint)** — The CLI tool for displaying emotions
+- **[glint](https://github.com/sethgho/glint)** — The CLI tool for displaying emotions ([npm](https://www.npmjs.com/package/@sethgho/glint) · [releases](https://github.com/sethgho/glint/releases))
 - **[Tidbyt](https://tidbyt.com)** — The original 64×32 LED display
 
 ## License

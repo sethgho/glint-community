@@ -242,8 +242,12 @@ export function contributePage(): string {
       <p>Glint styles are SVG emotion packs — 10 expressive eye designs that scale to any display. Here's how to create and publish your own.</p>
 
       <h2>1. Set Up</h2>
-      <pre><code># Install glint CLI
-bun install -g glint
+      <pre><code># Install glint CLI (pick one)
+npm install -g @sethgho/glint        # npm
+bun install -g @sethgho/glint        # bun
+
+# Or download a standalone binary (no runtime needed)
+# See https://github.com/sethgho/glint/releases
 
 # Authenticate with GitHub
 glint auth login</code></pre>
