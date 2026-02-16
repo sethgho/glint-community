@@ -79,7 +79,7 @@ styles.get('/:author/:slug/download', async (c) => {
 styles.get('/:author/:slug/emotions/:emotion', async (c) => {
   const { author, slug, emotion } = c.req.param();
   const version = c.req.query('version');
-  const format = c.req.query('format') || 'png'; // svg or png (default png for Tidbyt)
+  const format = c.req.query('format') || 'png'; // svg or png (default png for rasterized displays)
   const width = parseInt(c.req.query('width') || '64');
   const height = parseInt(c.req.query('height') || '32');
   

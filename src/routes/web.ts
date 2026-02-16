@@ -42,7 +42,7 @@ web.get('/styles/:author/:slug', async (c) => {
     `@${author}/${slug} — Glint Community`,
     stylePage(style, versions),
     {
-      description: style.description || `${style.name} emotion style for Glint Tidbyt display`,
+      description: style.description || `${style.name} — expressive SVG eye style for Glint`,
       url: `https://glint.sethgholson.com/styles/${author}/${slug}`,
       image: `https://glint.sethgholson.com/api/styles/${author}/${slug}/emotions/happy?version=${style.version}`,
     },

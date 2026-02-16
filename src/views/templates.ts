@@ -3,7 +3,7 @@
  */
 
 export function layout(title: string, body: string, meta?: { description?: string; url?: string; image?: string }, user?: any): string {
-  const desc = meta?.description || 'Emotion packs for your Tidbyt. Expressive eyes on a 64×32 pixel display.';
+  const desc = meta?.description || 'Expressive SVG eye styles for any display — Tidbyt, TRMNL, desktop widgets, and more.';
   const url = meta?.url || 'https://glint.sethgholson.com';
   const ogImage = meta?.image || 'https://glint.sethgholson.com/img/og-image.png';
 
@@ -61,7 +61,7 @@ export function layout(title: string, body: string, meta?: { description?: strin
   <main>${body}</main>
   <footer class="footer">
     <div class="container">
-      <p>Glint — expressive eyes for your Tidbyt display</p>
+      <p>Glint — expressive eyes for any display</p>
     </div>
   </footer>
 </body>
@@ -76,8 +76,8 @@ export function homePage(styles: any[], total: number, page: number, search: str
       <div class="container">
         ${heroLogoSvg()}
         <p id="tilt-hint" style="display:none;font-size:0.8rem;color:var(--text-muted);margin-bottom:0.5rem;">Tap the eyes to enable tilt tracking 👆</p>
-        <h1>Emotion packs for your Tidbyt.</h1>
-        <p>Glint puts expressive eyes on your display. Pick a style, install it in one command.</p>
+        <h1>Expressive eyes for any display.</h1>
+        <p>SVG emotion styles that scale from 64×32 to 4K. Pick a style, install it in one command.</p>
         <form class="search-form" action="/" method="get">
           <input type="text" name="search" placeholder="Search styles..." value="${escHtml(search)}" class="search-input">
           <button type="submit" class="btn">Search</button>
@@ -173,7 +173,7 @@ export function stylePage(style: any, versions: any[]): string {
         <h3>Scaling Demo</h3>
         <p>SVGs scale infinitely — same file works on Tidbyt (64×32), TRMNL (800×480), and beyond.</p>
         <div class="scale-grid">
-          <div><img src="/api/styles/${escHtml(style.author)}/${escHtml(style.slug)}/emotions/happy?version=${escHtml(style.version)}&width=64&height=32" alt="64x32"><br><code>64×32 (Tidbyt)</code></div>
+          <div><img src="/api/styles/${escHtml(style.author)}/${escHtml(style.slug)}/emotions/happy?version=${escHtml(style.version)}&width=64&height=32" alt="64x32"><br><code>64×32</code></div>
           <div><img src="/api/styles/${escHtml(style.author)}/${escHtml(style.slug)}/emotions/happy?version=${escHtml(style.version)}&width=128&height=64" alt="128x64"><br><code>128×64</code></div>
           <div><img src="/api/styles/${escHtml(style.author)}/${escHtml(style.slug)}/emotions/happy?version=${escHtml(style.version)}&width=256&height=128" alt="256x128"><br><code>256×128</code></div>
         </div>
@@ -208,7 +208,7 @@ export function contributePage(): string {
   return `
     <div class="container contribute">
       <h1>Create & Share Glint Styles</h1>
-      <p>Glint styles are sets of 64×32 pixel PNG images — one for each emotion. Here's how to create and publish your own.</p>
+      <p>Glint styles are SVG emotion packs — 10 expressive eye designs that scale to any display. Here's how to create and publish your own.</p>
 
       <h2>1. Set Up</h2>
       <pre><code># Install glint CLI
@@ -218,37 +218,33 @@ bun install -g glint
 glint auth login</code></pre>
 
       <h2>2. Create a Style</h2>
-      <pre><code># Scaffold a new style package
+      <pre><code># Generate using AI (recommended)
+glint generate my-cool-eyes --aesthetic "cyberpunk neon glow"
+
+# Or scaffold manually
 glint style init my-cool-eyes
 
 # This creates:
 # ~/.config/glint/styles/my-cool-eyes/
 #   glint-style.json    (manifest)
-#   neutral.png         (placeholder)
-#   happy.png
-#   sad.png
-#   angry.png
-#   surprised.png
-#   worried.png
-#   sleepy.png
-#   excited.png
-#   confused.png
-#   focused.png</code></pre>
+#   neutral.svg, happy.svg, sad.svg, angry.svg,
+#   surprised.svg, worried.svg, sleepy.svg,
+#   excited.svg, confused.svg, focused.svg</code></pre>
 
       <h2>3. Design Your Emotions</h2>
-      <p>Each emotion is a <strong>64×32 pixel PNG</strong>. Use any tool you like:</p>
+      <p>Each emotion is an <strong>SVG file</strong> with a <code>viewBox</code> attribute (e.g., <code>viewBox="0 0 64 32"</code>). Use any tool:</p>
       <ul>
-        <li><strong>Pixel art editors:</strong> Aseprite, Piskel, Lospec</li>
-        <li><strong>AI generation:</strong> <code>glint generate my-style --prompt "cyberpunk robot eyes"</code></li>
-        <li><strong>Image editors:</strong> Photoshop, GIMP (resize to 64×32)</li>
+        <li><strong>AI generation:</strong> <code>glint generate my-style --aesthetic "watercolor soft pastels"</code></li>
+        <li><strong>Vector editors:</strong> Figma, Illustrator, Inkscape</li>
+        <li><strong>Hand-coded:</strong> SVGs are just XML — keep them simple for best results at small sizes</li>
       </ul>
       <p>Required emotions: neutral, happy, sad, angry, surprised, worried, sleepy, excited, confused, focused.</p>
 
       <h2>4. Validate</h2>
       <pre><code># Check your style meets the spec
-glint style validate my-cool-eyes
+glint validate my-cool-eyes
 
-# Preview locally on your Tidbyt
+# Preview on your display
 glint show happy --style my-cool-eyes</code></pre>
 
       <h2>5. Publish</h2>
@@ -266,20 +262,22 @@ glint style publish my-cool-eyes</code></pre>
     "neutral", "happy", "sad", "angry", "surprised",
     "worried", "sleepy", "excited", "confused", "focused"
   ],
-  "files": {
-    "neutral.png": "sha256:abc123...",
-    "happy.png": "sha256:def456...",
-    ...
-  },
+  "files": {},
   "tags": ["cyberpunk", "robot", "neon"],
   "license": "MIT"
 }</code></pre>
 
+      <h2>SVG Requirements</h2>
+      <ul>
+        <li>Must include a <code>viewBox</code> attribute</li>
+        <li>2:1 aspect ratio recommended (e.g., <code>viewBox="0 0 64 32"</code>)</li>
+        <li>Max 100KB per file (typical SVGs are 1-2KB)</li>
+        <li>Simpler = better — clean geometric paths render best at small sizes</li>
+      </ul>
+
       <h2>Rules</h2>
       <ul>
-        <li>All 10 required emotions must be present</li>
-        <li>Images must be exactly 64×32 pixels (PNG)</li>
-        <li>Max 500KB per image, 10MB total package</li>
+        <li>All 10 required emotions must be present as SVG files</li>
         <li>Published versions are immutable — bump version to update</li>
         <li>You can yank (soft-delete) a version, but not overwrite it</li>
         <li>Be kind. No offensive content.</li>
