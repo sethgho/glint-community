@@ -59,7 +59,7 @@ styles.get('/:author/:slug/download', async (c) => {
   const baseUrl = new URL(c.req.url).origin;
   const emotions = style.emotions.map((e: any) => ({
     emotion: e.emotion,
-    url: `${baseUrl}/api/styles/${author}/${slug}/emotions/${e.emotion}?version=${style.version}`,
+    url: `${baseUrl}/api/styles/${author}/${slug}/emotions/${e.emotion}?version=${style.version}&format=svg`,
     hash: e.file_hash,
     size: e.file_size,
   }));
