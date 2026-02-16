@@ -3,9 +3,15 @@
  */
 import { Hono } from 'hono';
 import { listStyles, getStyle, getStyleVersions } from '../lib/styles';
+import { getDb } from '../db/schema';
 import { layout, styleCard, stylePage, contributePage, homePage, dashboardPage, tokensPage } from '../views/templates';
 import { optionalSession, requireSession } from '../middleware/session';
 import { listTokens, createApiToken, revokeToken } from '../lib/auth';
+import { nanoid } from 'nanoid';
+
+function escHtml(s: string): string {
+  return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
 
 const web = new Hono();
 
@@ -90,6 +96,36 @@ web.post('/dashboard/tokens/:id/revoke', requireSession, async (c) => {
   const tokenId = c.req.param('id');
   revokeToken(tokenId, user.id);
   return c.redirect('/dashboard/tokens');
+});
+
+/** Report a style (POST) */
+web.post('/styles/:author/:slug/report', async (c) => {
+  const { author, slug } = c.req.param();
+  const style = getStyle(author, slug) as any;
+  if (!style) return c.redirect('/');
+
+  const body = await c.req.parseBody();
+  const reason = (body.reason as string || '').trim();
+  if (!reason) return c.redirect(`/styles/${author}/${slug}`);
+
+  const details = (body.details as string || '').trim() || null;
+  const user = c.get('sessionUser');
+  const reporterId = user?.id || null;
+
+  const db = getDb();
+  db.query('INSERT INTO style_reports (id, style_id, reporter_id, reason, details) VALUES (?, ?, ?, ?, ?)')
+    .run(nanoid(), style.id, reporterId, reason, details);
+
+  const html = layout(
+    'Report Submitted',
+    `<div class="container" style="padding-top:3rem;text-align:center;">
+      <h1>🚩 Report Submitted</h1>
+      <p>Thanks for reporting <strong>@${escHtml(author)}/${escHtml(slug)}</strong>. We'll review it.</p>
+      <a href="/styles/${escHtml(author)}/${escHtml(slug)}" class="btn">Back to style</a>
+    </div>`,
+    undefined, user
+  );
+  return c.html(html);
 });
 
 export default web;

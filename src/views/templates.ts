@@ -156,7 +156,6 @@ export function stylePage(style: any, versions: any[]): string {
       </div>
 
       <h2>Emotions</h2>
-      <p class="hint">✨ All glint styles are SVG — emotions scale perfectly to any size!</p>
       <div class="emotion-grid">
         ${sortEmotions(emotions).map((e: any) => {
           const imgUrl = `/api/styles/${escHtml(style.author)}/${escHtml(style.slug)}/emotions/${escHtml(e.emotion)}?version=${escHtml(style.version)}`;
@@ -164,19 +163,9 @@ export function stylePage(style: any, versions: any[]): string {
             <div class="emotion-card">
               <img src="${imgUrl}" alt="${escHtml(e.emotion)}" class="emotion-img">
               <code class="emotion-label">${escHtml(e.emotion)}</code>
-              <a href="${imgUrl}&format=svg" class="svg-link" download="${escHtml(e.emotion)}.svg" title="Download SVG">⬇ SVG</a>
             </div>
           `;
         }).join('')}
-      </div>
-      <div class="scale-demo">
-        <h3>Scaling Demo</h3>
-        <p>SVGs scale infinitely — same file works on Tidbyt (64×32), TRMNL (800×480), and beyond.</p>
-        <div class="scale-grid">
-          <div><img src="/api/styles/${escHtml(style.author)}/${escHtml(style.slug)}/emotions/happy?version=${escHtml(style.version)}&width=64&height=32" alt="64x32"><br><code>64×32</code></div>
-          <div><img src="/api/styles/${escHtml(style.author)}/${escHtml(style.slug)}/emotions/happy?version=${escHtml(style.version)}&width=128&height=64" alt="128x64"><br><code>128×64</code></div>
-          <div><img src="/api/styles/${escHtml(style.author)}/${escHtml(style.slug)}/emotions/happy?version=${escHtml(style.version)}&width=256&height=128" alt="256x128"><br><code>256×128</code></div>
-        </div>
       </div>
 
       ${style.readme ? `<div class="readme"><h2>README</h2><pre>${escHtml(style.readme)}</pre></div>` : ''}
@@ -198,8 +187,21 @@ export function stylePage(style: any, versions: any[]): string {
         </table>
       ` : ''}
 
-      <div class="report-link">
-        <a href="#" onclick="alert('Report functionality coming soon')">🚩 Report this style</a>
+      <div class="report-section">
+        <details>
+          <summary class="report-link">🚩 Report this style</summary>
+          <form method="POST" action="/styles/${escHtml(style.author)}/${escHtml(style.slug)}/report" class="report-form">
+            <select name="reason" required>
+              <option value="">Select a reason…</option>
+              <option value="offensive">Offensive content</option>
+              <option value="copyright">Copyright violation</option>
+              <option value="spam">Spam</option>
+              <option value="other">Other</option>
+            </select>
+            <textarea name="details" placeholder="Additional details (optional)" rows="2"></textarea>
+            <button type="submit" class="btn btn-sm">Submit Report</button>
+          </form>
+        </details>
       </div>
     </div>`;
 }

@@ -224,7 +224,11 @@ a:hover { color: var(--accent-hover); }
 }
 .versions-table th { color: var(--text-muted); font-weight: 500; }
 
-.report-link { margin-top: 2rem; font-size: 0.85rem; color: var(--text-muted); }
+.report-section { margin-top: 2rem; }
+.report-link { font-size: 0.85rem; color: var(--text-muted); cursor: pointer; }
+.report-form { margin-top: 0.75rem; display: flex; flex-direction: column; gap: 0.5rem; max-width: 400px; }
+.report-form select, .report-form textarea { background: var(--surface); color: var(--text); border: 1px solid var(--border); border-radius: 6px; padding: 0.5rem; font-size: 0.85rem; }
+.report-form textarea { resize: vertical; }
 
 /* Contribute page */
 .contribute { padding: 2rem 1.5rem 3rem; }
