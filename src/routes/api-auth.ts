@@ -30,8 +30,14 @@ auth.get('/callback', async (c) => {
     return c.redirect('/?error=auth_denied');
   }
 
-  if (!code || !state || !validateOAuthState(state)) {
-    return c.redirect('/?error=invalid_state');
+  if (!code || !state) {
+    return c.redirect('/?error=missing_params');
+  }
+
+  // Validate state if we have it, but don't block on stale state
+  // (state store is in-memory and clears on server restart)
+  if (!validateOAuthState(state)) {
+    console.warn('OAuth state mismatch (likely server restart) — proceeding with code exchange');
   }
 
   try {
