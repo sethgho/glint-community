@@ -188,9 +188,11 @@ export function stylePage(style: any, versions: any[]): string {
       ` : ''}
 
       <div class="report-section">
-        <details>
-          <summary class="report-link">🚩 Report this style</summary>
+        <a href="#" class="report-link" onclick="document.getElementById('report-modal').showModal();return false">🚩 Report this style</a>
+        <dialog id="report-modal" class="report-modal">
           <form method="POST" action="/styles/${escHtml(style.author)}/${escHtml(style.slug)}/report" class="report-form">
+            <h3>Report @${escHtml(style.author)}/${escHtml(style.slug)}</h3>
+            <label>Reason</label>
             <select name="reason" required>
               <option value="">Select a reason…</option>
               <option value="offensive">Offensive content</option>
@@ -198,10 +200,14 @@ export function stylePage(style: any, versions: any[]): string {
               <option value="spam">Spam</option>
               <option value="other">Other</option>
             </select>
-            <textarea name="details" placeholder="Additional details (optional)" rows="2"></textarea>
-            <button type="submit" class="btn btn-sm">Submit Report</button>
+            <label>Details <span style="color:var(--text-muted);font-weight:normal">(optional)</span></label>
+            <textarea name="details" placeholder="Tell us more…" rows="3"></textarea>
+            <div class="report-actions">
+              <button type="button" class="btn btn-sm" onclick="document.getElementById('report-modal').close()">Cancel</button>
+              <button type="submit" class="btn btn-sm btn-danger">Submit Report</button>
+            </div>
           </form>
-        </details>
+        </dialog>
       </div>
     </div>`;
 }
