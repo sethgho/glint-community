@@ -64,6 +64,27 @@ export function layout(title: string, body: string, meta?: { description?: strin
       <p>Glint — expressive eyes for any display</p>
     </div>
   </footer>
+  <script>
+  (function(){
+    var hero = document.getElementById('hero-logo');
+    var navLogo = document.querySelector('.nav-logo');
+    if (!hero || !navLogo) return;
+    var wasVisible = true;
+    var ob = new IntersectionObserver(function(entries){
+      var visible = entries[0].isIntersecting;
+      if (visible === wasVisible) return;
+      wasVisible = visible;
+      if (!visible) {
+        navLogo.classList.remove('nav-logo-hidden');
+        navLogo.classList.add('nav-logo-visible');
+      } else {
+        navLogo.classList.remove('nav-logo-visible');
+        navLogo.classList.add('nav-logo-hidden');
+      }
+    }, { threshold: 0.1 });
+    ob.observe(hero);
+  })();
+  </script>
 </body>
 </html>`;
 }
