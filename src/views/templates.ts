@@ -36,7 +36,7 @@ export function layout(title: string, body: string, meta?: { description?: strin
   <link rel="apple-touch-icon" sizes="180x180" href="/img/apple-touch-icon.png">
   <link rel="icon" type="image/png" sizes="192x192" href="/img/icon-192.png">
 
-  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css?v=${Date.now()}">
 </head>
 <body>
   <nav class="nav">
