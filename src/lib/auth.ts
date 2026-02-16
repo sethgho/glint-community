@@ -22,11 +22,13 @@ export function upsertUser(githubId: number, username: string, displayName: stri
   const db = getDb();
   const id = nanoid();
   
-  const existing = db.query('SELECT * FROM users WHERE github_id = ?').get(githubId) as any;
+  // Try matching by github_id first, then by username (for seeded accounts with placeholder github_id)
+  const existing = (db.query('SELECT * FROM users WHERE github_id = ?').get(githubId) as any)
+    || (db.query('SELECT * FROM users WHERE username = ?').get(username) as any);
   if (existing) {
-    db.query("UPDATE users SET username = ?, display_name = ?, avatar_url = ?, updated_at = datetime('now') WHERE id = ?")
-      .run(username, displayName, avatarUrl, existing.id);
-    return { ...existing, username, display_name: displayName, avatar_url: avatarUrl };
+    db.query("UPDATE users SET github_id = ?, username = ?, display_name = ?, avatar_url = ?, updated_at = datetime('now') WHERE id = ?")
+      .run(githubId, username, displayName, avatarUrl, existing.id);
+    return { ...existing, github_id: githubId, username, display_name: displayName, avatar_url: avatarUrl };
   }
 
   db.query('INSERT INTO users (id, github_id, username, display_name, avatar_url) VALUES (?, ?, ?, ?, ?)')
