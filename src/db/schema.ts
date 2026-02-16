@@ -66,23 +66,10 @@ function migrate(db: Database) {
       download_count INTEGER NOT NULL DEFAULT 0,
       published_at TEXT NOT NULL DEFAULT (datetime('now')),
       yanked_at TEXT,
-      format TEXT DEFAULT 'png',
       animated INTEGER DEFAULT 0,
       UNIQUE(user_id, slug, version)
     )
   `);
-  
-  // Add format and animated columns if they don't exist (migration)
-  try {
-    db.run('ALTER TABLE styles ADD COLUMN format TEXT DEFAULT "png"');
-  } catch {
-    // Column already exists
-  }
-  try {
-    db.run('ALTER TABLE styles ADD COLUMN animated INTEGER DEFAULT 0');
-  } catch {
-    // Column already exists
-  }
 
   db.run(`
     CREATE TABLE IF NOT EXISTS style_emotions (

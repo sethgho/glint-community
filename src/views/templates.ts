@@ -105,18 +105,14 @@ export function homePage(styles: any[], total: number, page: number, search: str
 }
 
 export function styleCard(style: any): string {
-  const format = style.format || 'png';
   const previewUrl = `/api/styles/${escHtml(style.author)}/${escHtml(style.slug)}/emotions/happy?version=${escHtml(style.version)}`;
-  const formatBadge = format === 'svg' 
-    ? '<span class="badge badge-svg">SVG</span>' 
-    : '<span class="badge badge-raster">Raster</span>';
   const animatedBadge = style.animated ? '<span class="badge badge-animated">✨ Animated</span>' : '';
 
   return `
     <a href="/styles/${escHtml(style.author)}/${escHtml(style.slug)}" class="card">
       <div class="card-preview">
         ${previewUrl ? `<img src="${previewUrl}" alt="${escHtml(style.name)} preview" loading="lazy">` : '<div class="card-placeholder">👀</div>'}
-        <div class="card-badges">${formatBadge}${animatedBadge}</div>
+        ${animatedBadge ? `<div class="card-badges">${animatedBadge}</div>` : ''}
       </div>
       <div class="card-body">
         <h3 class="card-title">@${escHtml(style.author)}/${escHtml(style.slug)}</h3>
@@ -131,10 +127,6 @@ export function styleCard(style: any): string {
 
 export function stylePage(style: any, versions: any[]): string {
   const emotions = style.emotions || [];
-  const format = style.format || 'png';
-  const formatBadge = format === 'svg' 
-    ? '<span class="badge badge-svg">SVG</span>' 
-    : '<span class="badge badge-raster">Raster (PNG)</span>';
   const animatedBadge = style.animated ? '<span class="badge badge-animated">✨ Animated</span>' : '';
   
   return `
@@ -149,7 +141,6 @@ export function stylePage(style: any, versions: any[]): string {
           <p class="style-desc">${escHtml(style.description || '')}</p>
           <div class="style-meta">
             <span class="badge">v${escHtml(style.version)}</span>
-            ${formatBadge}
             ${animatedBadge}
             <span>⬇ ${style.download_count || 0} downloads</span>
             <span>Published ${escHtml(style.published_at?.split('T')[0] || '')}</span>
@@ -165,7 +156,7 @@ export function stylePage(style: any, versions: any[]): string {
       </div>
 
       <h2>Emotions</h2>
-      ${format === 'svg' ? `<p class="hint">✨ This style uses SVG — emotions scale perfectly to any size!</p>` : ''}
+      <p class="hint">✨ All glint styles are SVG — emotions scale perfectly to any size!</p>
       <div class="emotion-grid">
         ${emotions.map((e: any) => {
           const imgUrl = `/api/styles/${escHtml(style.author)}/${escHtml(style.slug)}/emotions/${escHtml(e.emotion)}?version=${escHtml(style.version)}`;
@@ -173,22 +164,20 @@ export function stylePage(style: any, versions: any[]): string {
             <div class="emotion-card">
               <img src="${imgUrl}" alt="${escHtml(e.emotion)}" class="emotion-img">
               <code class="emotion-label">${escHtml(e.emotion)}</code>
-              ${format === 'svg' ? `<a href="${imgUrl}&format=svg" class="svg-link" download="${escHtml(e.emotion)}.svg" title="Download SVG">⬇ SVG</a>` : ''}
+              <a href="${imgUrl}&format=svg" class="svg-link" download="${escHtml(e.emotion)}.svg" title="Download SVG">⬇ SVG</a>
             </div>
           `;
         }).join('')}
       </div>
-      ${format === 'svg' ? `
-        <div class="scale-demo">
-          <h3>Scaling Demo</h3>
-          <p>SVGs scale infinitely — same file works on Tidbyt (64x32), TRMNL (800x480), and beyond.</p>
-          <div class="scale-grid">
-            <div><img src="/api/styles/${escHtml(style.author)}/${escHtml(style.slug)}/emotions/happy?version=${escHtml(style.version)}&width=64&height=32" alt="64x32"><br><code>64×32 (Tidbyt)</code></div>
-            <div><img src="/api/styles/${escHtml(style.author)}/${escHtml(style.slug)}/emotions/happy?version=${escHtml(style.version)}&width=128&height=64" alt="128x64"><br><code>128×64</code></div>
-            <div><img src="/api/styles/${escHtml(style.author)}/${escHtml(style.slug)}/emotions/happy?version=${escHtml(style.version)}&width=256&height=128" alt="256x128"><br><code>256×128</code></div>
-          </div>
+      <div class="scale-demo">
+        <h3>Scaling Demo</h3>
+        <p>SVGs scale infinitely — same file works on Tidbyt (64×32), TRMNL (800×480), and beyond.</p>
+        <div class="scale-grid">
+          <div><img src="/api/styles/${escHtml(style.author)}/${escHtml(style.slug)}/emotions/happy?version=${escHtml(style.version)}&width=64&height=32" alt="64x32"><br><code>64×32 (Tidbyt)</code></div>
+          <div><img src="/api/styles/${escHtml(style.author)}/${escHtml(style.slug)}/emotions/happy?version=${escHtml(style.version)}&width=128&height=64" alt="128x64"><br><code>128×64</code></div>
+          <div><img src="/api/styles/${escHtml(style.author)}/${escHtml(style.slug)}/emotions/happy?version=${escHtml(style.version)}&width=256&height=128" alt="256x128"><br><code>256×128</code></div>
         </div>
-      ` : ''}
+      </div>
 
       ${style.readme ? `<div class="readme"><h2>README</h2><pre>${escHtml(style.readme)}</pre></div>` : ''}
 

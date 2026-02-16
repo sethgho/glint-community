@@ -17,7 +17,6 @@ export interface PublishInput {
   readme?: string;
   emotions: Map<string, Buffer>;
   previewGif?: Buffer;
-  format?: 'svg' | 'png';
   animated?: boolean;
 }
 
@@ -39,12 +38,10 @@ export function publishStyle(userId: string, input: PublishInput): { id: string;
   const stylePath = join(UPLOADS_DIR, user.username, input.slug, input.version);
   mkdirSync(stylePath, { recursive: true });
 
-  const format = input.format || 'png';
-  const extension = format === 'svg' ? '.svg' : '.png';
   const emotionRows: { emotion: string; filePath: string; fileHash: string; fileSize: number }[] = [];
   
   for (const [emotion, buffer] of input.emotions) {
-    const filePath = join(stylePath, `${emotion}${extension}`);
+    const filePath = join(stylePath, `${emotion}.svg`);
     writeFileSync(filePath, buffer);
     const hash = createHash('sha256').update(buffer).digest('hex');
     emotionRows.push({ emotion, filePath, fileHash: hash, fileSize: buffer.length });
@@ -62,8 +59,8 @@ export function publishStyle(userId: string, input: PublishInput): { id: string;
 
   // Transaction via bun:sqlite
   const insertStyle = db.query(`
-    INSERT INTO styles (id, user_id, name, slug, description, version, readme, preview_path, format, animated)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    INSERT INTO styles (id, user_id, name, slug, description, version, readme, preview_path, animated)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
   `);
 
   const insertEmotion = db.query(`
@@ -72,7 +69,7 @@ export function publishStyle(userId: string, input: PublishInput): { id: string;
   `);
 
   const tx = db.transaction(() => {
-    insertStyle.run(id, userId, input.name, input.slug, input.description, input.version, input.readme || null, previewPath, format, input.animated ? 1 : 0);
+    insertStyle.run(id, userId, input.name, input.slug, input.description, input.version, input.readme || null, previewPath, input.animated ? 1 : 0);
     for (const row of emotionRows) {
       insertEmotion.run(nanoid(), id, row.emotion, row.filePath, row.fileHash, row.fileSize);
     }
