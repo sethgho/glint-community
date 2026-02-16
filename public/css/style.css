@@ -45,11 +45,12 @@ a:hover { color: var(--accent-hover); }
   display: flex;
   justify-content: space-between;
   align-items: center;
+  align-items: center;
 }
 .nav-brand { color: var(--text); font-size: 1.2rem; display: flex; align-items: center; gap: 0.5rem; }
 .nav-brand:hover { color: var(--text); }
 .nav-logo { height: 28px; width: auto; color: var(--text); display: inline-block; vertical-align: middle; }
-.nav-links { display: flex; gap: 1.5rem; }
+.nav-links { display: flex; gap: 1.5rem; align-items: center; }
 .nav-links a { color: var(--text-muted); font-size: 0.9rem; }
 .nav-links a:hover { color: var(--text); }
 .nav-user { display: flex; align-items: center; gap: 0.4rem; }
