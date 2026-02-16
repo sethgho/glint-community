@@ -118,10 +118,10 @@ web.post('/styles/:author/:slug/report', async (c) => {
 
   const html = layout(
     'Report Submitted',
-    `<div class="container" style="padding-top:3rem;text-align:center;">
-      <h1>🚩 Report Submitted</h1>
-      <p>Thanks for reporting <strong>@${escHtml(author)}/${escHtml(slug)}</strong>. We'll review it.</p>
-      <a href="/styles/${escHtml(author)}/${escHtml(slug)}" class="btn">Back to style</a>
+    `<div class="container" style="padding-top:8rem;padding-bottom:8rem;text-align:center;">
+      <h1 style="font-size:2rem;margin-bottom:1rem;">🚩 Report Submitted</h1>
+      <p style="font-size:1.1rem;color:var(--text-muted);margin-bottom:2rem;">Thanks for reporting <strong>@${escHtml(author)}/${escHtml(slug)}</strong>. We'll review it.</p>
+      <a href="/styles/${escHtml(author)}/${escHtml(slug)}" class="btn btn-primary">Back to style</a>
     </div>`,
     undefined, user
   );
