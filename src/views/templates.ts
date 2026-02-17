@@ -3,7 +3,7 @@
  */
 
 export function layout(title: string, body: string, meta?: { description?: string; url?: string; image?: string }, user?: any): string {
-  const desc = meta?.description || 'Expressive SVG eye styles for any display — Tidbyt, TRMNL, desktop widgets, and more.';
+  const desc = meta?.description || 'Agents have feelings too. glint gives your AI a face — expressive SVG eyes for Tidbyt, TRMNL, and any display.';
   const url = meta?.url || 'https://glint.sethgholson.com';
   const ogImage = meta?.image || 'https://glint.sethgholson.com/img/og-image.png';
 
@@ -62,7 +62,7 @@ export function layout(title: string, body: string, meta?: { description?: strin
   <main>${body}</main>
   <footer class="footer">
     <div class="container">
-      <p>Glint — expressive eyes for any display</p>
+      <p>Glint — agents have feelings too</p>
     </div>
   </footer>
   <script>
@@ -98,7 +98,8 @@ export function homePage(styles: any[], total: number, page: number, search: str
       <div class="container">
         ${heroLogoSvg()}
         <p id="tilt-hint" style="display:none;font-size:0.8rem;color:var(--text-muted);margin-bottom:0.5rem;">Tap the eyes to enable tilt tracking 👆</p>
-        <h1>Expressive eyes for any display.</h1>
+        <h1>Agents have feelings too.</h1>
+        <p class="hero-sub">glint gives your AI a face — so you can see what it's feeling.</p>
         <p>SVG emotion styles that scale from 64×32 to 4K. Pick a style, install it in one command.</p>
         <form class="search-form" action="/" method="get">
           <input type="text" name="search" placeholder="Search styles..." value="${escHtml(search)}" class="search-input">
