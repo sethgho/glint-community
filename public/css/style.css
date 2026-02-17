@@ -123,6 +123,30 @@ a:hover { color: var(--mauve); text-decoration: underline; }
 .hero h1 { font-size: 28px; font-weight: 700; margin-bottom: 8px; color: var(--text); letter-spacing: 1px; }
 .hero p { color: var(--subtext0); margin-bottom: 1.5rem; font-size: 13px; }
 
+/* Hero Install */
+.install-hero {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  background: var(--mantle);
+  border: 1px solid var(--surface0);
+  border-radius: 8px;
+  padding: 0.75rem 1.25rem;
+  max-width: 420px;
+  margin: 1rem auto 1.5rem;
+}
+.install-hero .install-cmd {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 14px;
+  color: var(--sapphire);
+  user-select: all;
+}
+.install-hero .btn-copy {
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
 /* Search */
 .search-form { display: flex; gap: 0.5rem; justify-content: center; max-width: 480px; margin: 0 auto; }
 .search-input {

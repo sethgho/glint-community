@@ -101,6 +101,10 @@ export function homePage(styles: any[], total: number, page: number, search: str
         <h1>Agents have feelings too.</h1>
         <p class="hero-sub">glint gives your AI a face — so you can see what it's feeling.</p>
         <p>SVG emotion styles that scale from 64×32 to 4K. Pick a style, install it in one command.</p>
+        <div class="install-hero">
+          <code class="install-cmd" id="hero-install-cmd">npm install -g @sethgho/glint</code>
+          <button class="btn btn-sm btn-copy" onclick="navigator.clipboard.writeText('npm install -g @sethgho/glint').then(function(){var b=document.querySelector('.btn-copy');b.textContent='Copied!';setTimeout(function(){b.textContent='Copy'},1500)})">Copy</button>
+        </div>
         <form class="search-form" action="/" method="get">
           <input type="text" name="search" placeholder="Search styles..." value="${escHtml(search)}" class="search-input">
           <button type="submit" class="btn">Search</button>
