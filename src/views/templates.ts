@@ -170,8 +170,8 @@ export function stylePage(style: any, versions: any[]): string {
           <div class="style-meta">
             <span class="badge">v${escHtml(style.version)}</span>
             ${animatedBadge}
-            <span>⬇ ${style.download_count || 0} downloads</span>
-            <span>Published ${escHtml((style.published_at || '').split(/[T ]/)[0])}</span>
+            <span style="white-space:nowrap">⬇ ${style.download_count || 0} downloads</span>
+            <span style="white-space:nowrap">Published ${escHtml((style.published_at || '').split(/[T ]/)[0])}</span>
           </div>
         </div>
         ${style.author_avatar ? `<img src="${escHtml(style.author_avatar)}" class="author-avatar" alt="${escHtml(style.author)}">` : ''}
